@@ -17,8 +17,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** ロール（0:一般ユーザー 1:管理者） */
-    private int role;
+    /** ロール （例：ADMIN / USER）*/
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     /** 氏名 */
     private String name;
