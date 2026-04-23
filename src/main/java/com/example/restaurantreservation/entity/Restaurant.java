@@ -30,11 +30,11 @@ public class Restaurant {
     /** 休業日 */
     private String holidays;
 
-    /** 予約開始時刻 */
-    private LocalTime openTime;
+    /** 受付開始時刻 */
+    private LocalTime receptionStartTime;
 
-    /** 予約終了時刻 */
-    private LocalTime closeTime;
+    /** 受付終了時刻 */
+    private LocalTime receptionEndTime;
 
     /** 作成日時 */
     private LocalDateTime createdAt;
