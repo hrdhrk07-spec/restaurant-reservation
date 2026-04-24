@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+/**
+ * 予約関連のビジネスロジックを記載したサービスクラス
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -16,15 +18,32 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public List<Reservation> getAllReservations(){
+    /**
+     * 予約の全件取得
+     *
+     * @return 予約のリスト
+     */
+    public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
-    public List<Reservation> getReservationsByUserId(Long userId){
+    /**
+     * IDに一致する予約の全件取得
+     *
+     * @param userId ユーザID
+     * @return 予約のリスト
+     */
+    public List<Reservation> getReservationsByUserId(Long userId) {
         return reservationRepository.findByUserId(userId);
     }
 
-    public Reservation saveReservation(Reservation reservation){
+    /**
+     * 予約の登録
+     *
+     * @param reservation 予約
+     * @return 登録した予約
+     */
+    public Reservation saveReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 

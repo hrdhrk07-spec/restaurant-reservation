@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * レストラン関連のビジネスロジックを記載したサービスクラス
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -17,19 +19,41 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    public List<Restaurant> getAllRestaurants(){
+    /**
+     * レストランの全件取得
+     *
+     * @return レストランのリスト
+     */
+    public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
 
-    public Optional<Restaurant> getRestaurantById(Long id){
+    /**
+     * IDに一致するレストランを1件取得
+     *
+     * @param id レストランID
+     * @return レストラン
+     */
+    public Optional<Restaurant> getRestaurantById(Long id) {
         return restaurantRepository.findById(id);
     }
 
-    public Restaurant saveRestaurant(Restaurant restaurant){
+    /**
+     * レストランの登録
+     *
+     * @param restaurant レストラン
+     * @return 登録したレストラン
+     */
+    public Restaurant saveRestaurant(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
 
-    public void deleteRestaurant(Long id){
+    /**
+     * IDに一致したレストランの削除
+     *
+     * @param id レストランID
+     */
+    public void deleteRestaurant(Long id) {
         restaurantRepository.deleteById(id);
     }
 

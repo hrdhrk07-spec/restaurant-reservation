@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+/**
+ * 席詳細関連のビジネスロジックを記載したサービスクラス
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -16,15 +18,32 @@ public class SeatDetailService {
 
     private final SeatDetailRepository seatDetailRepository;
 
-    public List<SeatDetail> getAllSeatDetailsByRestaurantId(Long restaurantId){
+    /**
+     * レストランIDに一致する席詳細の全件取得
+     *
+     * @param restaurantId レストランID
+     * @return 席詳細のリスト
+     */
+    public List<SeatDetail> getAllSeatDetailsByRestaurantId(Long restaurantId) {
         return seatDetailRepository.findByRestaurantId(restaurantId);
     }
 
-    public SeatDetail saveSeatDetail(SeatDetail seatDetail){
+    /**
+     * 席詳細の登録
+     *
+     * @param seatDetail 席詳細
+     * @return 登録した席詳細
+     */
+    public SeatDetail saveSeatDetail(SeatDetail seatDetail) {
         return seatDetailRepository.save(seatDetail);
     }
 
-    public void deleteSeatDetail(Long id){
+    /**
+     * IDに一致した席詳細の削除
+     *
+     * @param id 席詳細ID
+     */
+    public void deleteSeatDetail(Long id) {
         seatDetailRepository.deleteById(id);
     }
 

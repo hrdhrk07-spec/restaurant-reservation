@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * ユーザ関連のビジネスロジックを記載したサービスクラス
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -17,20 +19,52 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> getAllUsers(){
+    /**
+     * ユーザの全件取得
+     *
+     * @return ユーザのリスト
+     */
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id){
+    /**
+     * IDに一致するユーザを1件取得
+     *
+     * @param id ユーザID
+     * @return ユーザ
+     */
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    public User saveUser(User user){
+    /**
+     * ユーザの登録
+     *
+     * @param user ユーザ
+     * @return 登録したユーザ
+     */
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id){
+    /**
+     * IDに一致したユーザの削除
+     *
+     * @param id ユーザID
+     */
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    /**
+     * Emailに一致したユーザを取得
+     *
+     * @param email メールアドレス
+     * @return boolean
+     */
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
 }

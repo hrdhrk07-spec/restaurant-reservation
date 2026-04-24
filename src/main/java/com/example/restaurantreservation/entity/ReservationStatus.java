@@ -1,7 +1,7 @@
 package com.example.restaurantreservation.entity;
 
 /**
- * 予約状況のステータス。
+ * 予約状況のステータス
  */
 public enum ReservationStatus {
     PENDING,    // 予約申請中

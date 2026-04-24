@@ -1,7 +1,7 @@
 package com.example.restaurantreservation.entity;
 
 /**
- * ユーザーのロール。
+ * ユーザーのロール
  */
 public enum UserRole {
     ADMIN,  // 管理者
