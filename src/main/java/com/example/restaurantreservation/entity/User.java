@@ -1,8 +1,15 @@
 package com.example.restaurantreservation.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * ユーザ情報を管理するエンティティクラス
@@ -10,32 +17,69 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
-    /** ID（主キー） */
+    /**
+     * ID（主キー）
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** ロール （例：ADMIN / USER）*/
+    /**
+     * メールアドレス
+     */
+    @Email
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    /**
+     * パスワード
+     */
+    private String password;
+
+    /**
+     * ロール （例：ADMIN / USER）
+     */
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    /** 氏名 */
+    /**
+     * 氏名
+     */
     private String name;
 
-    /** 電話番号 */
+    /**
+     * 電話番号
+     */
     private String phoneNumber;
 
-    /** メールアドレス */
-    private String email;
-
-    /** パスワード */
-    private String password;
-
-    /** 作成日時 */
+    /**
+     * 作成日時
+     */
     private LocalDateTime createdAt;
 
-    /** 更新日時 */
+    /**
+     * 更新日時
+     */
     private LocalDateTime updatedAt;
+
+    /**
+     * このユーザに付与されている権限一覧を返す
+     *
+     * @return GrantedAuthorityを継承したクラスのコレクション
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    /**
+     * ユーザ名（メールアドレス）を取得する
+     */
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
 }
