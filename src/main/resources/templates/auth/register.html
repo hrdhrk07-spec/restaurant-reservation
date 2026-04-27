@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/auth-layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>新規登録</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    　
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">
+                                    アカウント作成</h3></div>
+                                <div class="card-body">
+                                    <form method="post" th:action="@{/register}" th:object="${user}">
+                                        <div class="row mb-3 alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                                            <ul class="mb-0">
+                                                <li th:each="e : ${#fields.globalErrors()}">[[${e}]]</li>
+                                            </ul>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="name" name="name" type="text"
+                                                   placeholder="田中　太郎" th:field="*{name}"
+                                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"/>
+                                            <label for="name">名前</label>
+                                            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('name')}"
+                                                 th:errors="*{name}"></div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="phoneNumber" name="phoneNumber" type="tel"
+                                                   placeholder="000-000-0000" th:field="*{phoneNumber}"
+                                                   th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid' : ''"/>
+                                            <label for="phoneNumber">電話番号</label>
+                                            <div class="invalid-feedback d-block"
+                                                 th:if="${#fields.hasErrors('phoneNumber')}"
+                                                 th:errors="*{phoneNumber}"></div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="email" name="email" type="email"
+                                                   placeholder="name@example.com" th:field="*{email}"
+                                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"/>
+                                            <label for="email">メールアドレス</label>
+                                            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('email')}"
+                                                 th:errors="*{email}"></div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="password" name="password"
+                                                   type="password" placeholder="Create a password"
+                                                   th:field="*{password}"
+                                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"/>
+                                            <label for="password">パスワード（15文字以上、64文字以内）</label>
+                                            <div class="invalid-feedback d-block"
+                                                 th:if="${#fields.hasErrors('password')}"
+                                                 th:errors="*{password}"></div>
+                                        </div>
+                                        <div class="mt-4 mb-0">
+                                            <div class="d-grid"><input type="submit" class="btn btn-primary"
+                                                                       value="アカウント作成"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a th:href="@{/login}">ログインはこちら</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
