@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -55,6 +56,16 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     /**
+     * 連続ログイン失敗回数
+     */
+    private int failedLoginAttempts;
+
+    /**
+     * アカウントロック日時
+     */
+    private LocalDateTime lockTime;
+
+    /**
      * 作成日時
      */
     private LocalDateTime createdAt;
@@ -82,4 +93,15 @@ public class User implements UserDetails {
         return getEmail();
     }
 
+    /**
+     * アカウントが現在ロックされているかを判定する
+     *
+     * @return ロックされていなければtrue、されていればfalse
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        if (lockTime == null) {
+            return true;
+        } else return Duration.between(getLockTime(), LocalDateTime.now()).toMinutes() >= 60;
+    }
 }

@@ -61,7 +61,7 @@ public class UserService {
      * Emailに一致したユーザを取得
      *
      * @param email メールアドレス
-     * @return boolean
+     * @return 一致したユーザが存在すればtrue、存在しなければfalse
      */
     public boolean existsByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
