@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     /**
      * ID（主キー）
@@ -66,16 +66,6 @@ public class User implements UserDetails {
     private LocalDateTime lockTime;
 
     /**
-     * 作成日時
-     */
-    private LocalDateTime createdAt;
-
-    /**
-     * 更新日時
-     */
-    private LocalDateTime updatedAt;
-
-    /**
      * このユーザに付与されている権限一覧を返す
      *
      * @return GrantedAuthorityを継承したクラスのコレクション
@@ -100,8 +90,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        if (lockTime == null) {
-            return true;
-        } else return Duration.between(getLockTime(), LocalDateTime.now()).toMinutes() >= 60;
+        if (lockTime == null) return true;
+        return Duration.between(getLockTime(), LocalDateTime.now()).toMinutes() >= 60;
     }
 }

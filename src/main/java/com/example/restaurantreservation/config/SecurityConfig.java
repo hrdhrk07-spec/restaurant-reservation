@@ -39,6 +39,9 @@ public class SecurityConfig {
                         // ログインのURL
                         .loginPage("/login")
 
+                        // メールアドレスで認証するよう設定
+                        .usernameParameter("email")
+
                         // ログイン成功時のリダイレクト先
                         .defaultSuccessUrl("/home", true) // trueにすることで常に/homeにリダイレクト
 

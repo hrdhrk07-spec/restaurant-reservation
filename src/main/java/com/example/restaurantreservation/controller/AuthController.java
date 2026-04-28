@@ -1,6 +1,7 @@
 package com.example.restaurantreservation.controller;
 
 import com.example.restaurantreservation.entity.User;
+import com.example.restaurantreservation.entity.UserRole;
 import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.service.UserService;
 import jakarta.validation.Valid;
@@ -75,6 +76,9 @@ public class AuthController {
 
         // パスワードの暗号化
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // ロールの設定
+        user.setRole(UserRole.USER);
 
         //　登録
         userService.saveUser(user);

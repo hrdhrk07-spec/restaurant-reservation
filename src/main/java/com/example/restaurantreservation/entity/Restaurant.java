@@ -2,6 +2,7 @@ package com.example.restaurantreservation.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -11,34 +12,50 @@ import java.time.LocalTime;
 @Data
 @Entity
 @Table(name = "restaurants")
-public class Restaurant {
+public class Restaurant extends BaseEntity {
 
-    /** ID（主キー） */
+    /**
+     * ID（主キー）
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** レストラン名 */
+    /**
+     * レストラン名
+     */
+    @Column(nullable = false)
     private String name;
 
-    /** ジャンル */
+    /**
+     * ジャンル
+     */
+    @Column(nullable = false)
     private String cuisineType;
 
-    /** 所在地 */
+    /**
+     * 所在地
+     */
     private String location;
 
-    /** 休業日 */
+    /**
+     * 画像パス
+     */
+    private String imagePath;
+
+    /**
+     * 休業日
+     */
     private String holidays;
 
-    /** 受付開始時刻 */
+    /**
+     * 受付開始時刻
+     */
     private LocalTime receptionStartTime;
 
-    /** 受付終了時刻 */
+    /**
+     * 受付終了時刻
+     */
     private LocalTime receptionEndTime;
 
-    /** 作成日時 */
-    private LocalDateTime createdAt;
-
-    /** 更新日時 */
-    private LocalDateTime updatedAt;
 }

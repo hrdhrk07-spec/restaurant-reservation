@@ -3,6 +3,9 @@ package com.example.restaurantreservation.service;
 import com.example.restaurantreservation.entity.Restaurant;
 import com.example.restaurantreservation.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,16 @@ public class RestaurantService {
      */
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
+    }
+
+    /**
+     * 最新10件のレストランを取得
+     *
+     * @return 最新10件のレストランのリスト
+     */
+    public List<Restaurant> getNewTenRestaurants() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+        return restaurantRepository.findAll(pageable).getContent();
     }
 
     /**
