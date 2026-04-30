@@ -27,6 +27,7 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model) {
         model.addAttribute("restaurantList", restaurantService.getNewTenRestaurants());
+        model.addAttribute("isHome", true);
         return "user/home";
     }
 

@@ -37,6 +37,41 @@
                 </div>
             </div>
         </nav>
+        <div class="bg-light p-2 container-fluid mt-1" th:unless="${isHome}">
+            <form method="GET" th:action="@{/restaurant-list}">
+                <div class="row g-1">
+                    <div class="col-auto">
+                        <select name="location" id="location" class="form-select">
+                            <option value="">--都道府県--</option>
+                            <option value="三重県">三重</option>
+                            <option value="滋賀県">滋賀</option>
+                            <option value="京都府">京都</option>
+                            <option value="奈良県">奈良</option>
+                            <option value="和歌山県">和歌山</option>
+                            <option value="大阪府">大阪</option>
+                            <option value="兵庫県">兵庫</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <select name="genre" id="genre" class="form-select">
+                            <option value="">--ジャンル--</option>
+                            <option value="和食">和食</option>
+                            <option value="洋食">洋食</option>
+                            <option value="イタリアン">イタリアン</option>
+                            <option value="フレンチ">フレンチ</option>
+                            <option value="中華">中華</option>
+                            <option value="アジア・エスニック">アジア・エスニック</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control" id="name" name="name" placeholder="レストラン名を入力"/>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">検索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </header>
     <!-- コンテンツの読み込み -->
     <main layout:fragment="content"></main>
