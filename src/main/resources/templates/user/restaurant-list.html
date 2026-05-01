@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>レストラン予約システム - ホーム</title>
+    <title>レストラン予約システム - レストラン一覧</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1" th:if="${!#lists.isEmpty(restaurantList)}">
+    <div class="row row-cols-1" th:if="${restaurantList != null && !#lists.isEmpty(restaurantList)}">
         <div class="col" th:each="restaurant : ${restaurantList}">
             <a th:href="@{/restaurant-detail/{id}(id=${restaurant.id})}">
                 <div class="card">
@@ -28,7 +28,7 @@
             </a>
         </div>
     </div>
-    <div class="row" th:unless="${!#lists.isEmpty(restaurantList)}">
+    <div class="row" th:unless="${restaurantList != null && !#lists.isEmpty(restaurantList)}">
         <p>該当のレストランはありません。</p>
     </div>
 </div>

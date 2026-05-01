@@ -12,17 +12,14 @@
     <div class="row row-cols-1">
         <div class="col">
             <div>
-                <form method="post" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
+                <form method="post" th:action="@{/reservation-complete}">
                     <h2 th:text="${restaurant.name}"></h2>
-                    <p th:text="${restaurant.cuisineType}"></p>
-                    <img th:if="${restaurant.imagePath != null}"
-                         th:src="@{'/images/' + ${restaurant.imagePath}}"
-                         class="card-img-top" alt="no image">
-                    <p th:text="${restaurant.location}"></p>
-                    <p th:if="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
-                    <p th:unless="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：' + ${restaurant.holidays}"></p>
+                    <p th:text="'予約日時：' + ${reservationForm.reservedAt}"></p>
+                    <p th:text="'予約人数：' + ${reservationForm.numberOfGuests}"></p>
+                    <p th:text="${seatDetail.personPerSeat} + '人席'"></p>
+                    <input type="hidden" name="seatDetailId" th:value="${seatDetail.id}">
                     <div class="d-grid gap-2 mt-4 mb-0">
-                        <input type="submit" class="btn btn-primary" value="予約">
+                        <input type="submit" class="btn btn-primary" value="予約確定">
                     </div>
                 </form>
             </div>

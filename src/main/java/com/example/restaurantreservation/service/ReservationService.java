@@ -1,12 +1,18 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.Reservation;
+import com.example.restaurantreservation.entity.ReservationStatus;
+import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.repository.ReservationRepository;
+import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 予約関連のビジネスロジックを記載したサービスクラス
@@ -17,6 +23,7 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final SeatDetailRepository seatDetailRepository;
 
     /**
      * 予約の全件取得
@@ -35,6 +42,34 @@ public class ReservationService {
      */
     public List<Reservation> getReservationsByUserId(Long userId) {
         return reservationRepository.findByUserId(userId);
+    }
+
+    /**
+     * 予約時の空席確認
+     *
+     * @param restaurantId   レストランID
+     * @param reservedAt     予約日時
+     * @param numberOfGuests 予約人数
+     * @return 席詳細のリスト
+     */
+    public List<SeatDetail> getAvailableSeats(Long restaurantId, LocalDateTime reservedAt, int numberOfGuests) {
+        // 予約人数から利用可能な席詳細を取得
+        List<SeatDetail> seatDetailList = seatDetailRepository.findAvailableSeatsByRestaurantAndGuests(restaurantId, numberOfGuests);
+
+        // 予約の重複確認用に予約のステータスを設定
+        List<String> statuses = List.of(ReservationStatus.PENDING.name(), ReservationStatus.CONFIRMED.name());
+
+        // 席の空き数が1以上ある席詳細を戻り値に設定
+        return seatDetailList.stream()
+                .filter(seatDetail -> seatDetail.getNumberOfSeats() -
+                        reservationRepository.countOverlapping(
+                                seatDetail.getId(),
+                                reservedAt,
+                                reservedAt.plusMinutes(seatDetail.getDuration()),
+                                statuses
+                        ) >= 1)
+                .collect(Collectors.toList());
+
     }
 
     /**

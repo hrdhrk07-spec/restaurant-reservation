@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 席詳細関連のビジネスロジックを記載したサービスクラス
@@ -17,6 +18,16 @@ import java.util.List;
 public class SeatDetailService {
 
     private final SeatDetailRepository seatDetailRepository;
+
+    /**
+     * IDに一致する席詳細を1件取得
+     *
+     * @param id    席詳細ID
+     * @return 席詳細
+     */
+    public Optional<SeatDetail> getSeatDetailById(Long id) {
+        return seatDetailRepository.findById(id);
+    }
 
     /**
      * レストランIDに一致する席詳細の全件取得

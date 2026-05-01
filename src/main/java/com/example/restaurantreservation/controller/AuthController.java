@@ -48,13 +48,13 @@ public class AuthController {
     /**
      * 新規登録処理
      *
-     * @param model Modelオブジェクト
      * @param registerForm 新規登録フォーム
      * @param result バリデーション結果
+     * @param model Modelオブジェクト
      * @return 登録画面または登録完了画面のテンプレートパス
      */
     @PostMapping("/register")
-    public String registerPost(Model model, @Valid @ModelAttribute RegisterForm registerForm, BindingResult result) {
+    public String registerPost(@Valid @ModelAttribute RegisterForm registerForm, BindingResult result, Model model) {
 
         // バリデーションエラーの場合は再度登録画面を表示
         if (result.hasErrors()) {
