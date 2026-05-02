@@ -1,13 +1,13 @@
 package com.example.restaurantreservation.controller;
 
-import com.example.restaurantreservation.entity.Restaurant;
-import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.entity.*;
 import com.example.restaurantreservation.form.ReservationForm;
-import com.example.restaurantreservation.service.ReservationService;
-import com.example.restaurantreservation.service.RestaurantService;
-import com.example.restaurantreservation.service.SeatDetailService;
+import com.example.restaurantreservation.repository.UserRepository;
+import com.example.restaurantreservation.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +26,7 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final RestaurantService restaurantService;
     private final SeatDetailService seatDetailService;
+    private final UserService userService;
 
     /**
      * レストランの取得及びmodelへの追加
@@ -112,15 +113,15 @@ public class ReservationController {
     /**
      * 予約確認画面の表示
      *
-     * @param seatDetailId      席詳細ID
-     * @param reservationForm   予約フォーム
-     * @param model             Modelオブジェクト
+     * @param seatDetailId    席詳細ID
+     * @param reservationForm 予約フォーム
+     * @param model           Modelオブジェクト
      * @return レストラン一覧画面のテンプレートパス
      */
     @PostMapping("/reservation-confirm")
     public String confirmPost(@RequestParam(required = false) Long seatDetailId, @ModelAttribute ReservationForm reservationForm, Model model) {
         //　席詳細IDを指定していなかった場合は再度予約入力画面を表示
-        if(seatDetailId == null){
+        if (seatDetailId == null) {
             return "user/reservation-input";
         }
 
@@ -144,6 +145,59 @@ public class ReservationController {
             return "redirect:/restaurant-list";
         }
 
+    }
+
+    /**
+     * 予約の実行
+     *
+     * @param userDetails     ユーザ情報
+     * @param seatDetailId    席詳細ID
+     * @param reservationForm 予約フォーム
+     * @param model           Modelオブジェクト
+     * @return 予約完了画面のテンプレートパス
+     */
+    @PostMapping("/reservation-complete")
+    public String completePost(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam Long seatDetailId,
+            @ModelAttribute ReservationForm reservationForm,
+            Model model) {
+
+        String email = userDetails.getUsername();
+
+        // メールアドレスからユーザを取得
+        Optional<User> optionalUser = userService.getUserByEmail(email);
+
+        // 席詳細IDから席詳細情報を取得
+        Optional<SeatDetail> optionalSeatDetail = seatDetailService.getSeatDetailById(seatDetailId);
+
+        // 取得できたときのみmodelに値を追加
+        if (optionalUser.isPresent() && optionalSeatDetail.isPresent()) {
+
+            // ユーザと席詳細をセット
+            User user = optionalUser.get();
+            SeatDetail seatDetail = optionalSeatDetail.get();
+
+            // 予約情報をセット
+            Reservation reservation = new Reservation();
+            reservation.setUser(user);
+            reservation.setSeatDetail(seatDetail);
+            reservation.setRestaurant(seatDetail.getRestaurant());
+            reservation.setReservedAt(reservationForm.getReservedAt());
+            reservation.setNumberOfGuests(reservationForm.getNumberOfGuests());
+            reservation.setStatus(ReservationStatus.PENDING);
+
+            // 予約情報を登録
+            reservationService.saveReservation(reservation);
+
+            // 必要な情報を画面に渡すようセット
+            model.addAttribute("reservation", reservation);
+
+            return "user/reservation-complete";
+
+        } else {
+            return "redirect:/restaurant-list";
+        }
     }
 
 }

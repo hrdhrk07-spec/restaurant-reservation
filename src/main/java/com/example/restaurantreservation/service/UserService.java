@@ -39,6 +39,16 @@ public class UserService {
     }
 
     /**
+     * メールアドレスに一致するユーザを1件取得
+     *
+     * @param email メールアドレス
+     * @return ユーザ
+     */
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    /**
      * ユーザの登録
      *
      * @param user ユーザ

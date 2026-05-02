@@ -12,7 +12,7 @@
     <div class="row row-cols-1">
         <div class="col">
             <div>
-                <form method="post" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
+                <form method="get" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
                     <h2 th:text="${restaurant.name}"></h2>
                     <p th:text="${restaurant.cuisineType}"></p>
                     <img th:if="${restaurant.imagePath != null}"

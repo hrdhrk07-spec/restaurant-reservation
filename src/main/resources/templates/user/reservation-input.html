@@ -19,15 +19,17 @@
                     <h2 th:text="${restaurant.name}"></h2>
                     <div class="form-floating mb-3">
                         <p th:if="${hasSeats}"
-                           th:text="${reservationForm.reservedAt}"></p>
+                           th:text="${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
                         <input th:unless="${hasSeats}"
+                               th:classappend="${#fields.hasErrors('reservedAt')} ? 'is-invalid' : ''"
                                th:field="*{reservedAt}" type="datetime-local" class="form-control" id="reservedAt"
-                               name="reservedAt">
+                               name="reservedAt" step="1800">
                     </div>
                     <div class="form-floating mb-3">
                         <p th:if="${hasSeats}"
                            th:text="${reservationForm.numberOfGuests}"></p>
                         <input th:unless="${hasSeats}"
+                               th:classappend="${#fields.hasErrors('numberOfGuests')} ? 'is-invalid' : ''"
                                th:field="*{numberOfGuests}" class="form-control" id="numberOfGuests" type="number"
                                min="1" max="100">人
                     </div>

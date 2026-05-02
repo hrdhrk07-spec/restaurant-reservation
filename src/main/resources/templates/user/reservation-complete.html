@@ -12,16 +12,15 @@
     <div class="row row-cols-1">
         <div class="col">
             <div>
-                <form method="post" th:action="@{/reservation-complete}">
-                    <h2 th:text="'レストラン名：' + ${restaurant.name}"></h2>
-                    <p th:text="'予約日時：' + ${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
-                    <p th:text="'予約人数：' + ${reservationForm.numberOfGuests} + '人'"></p>
-                    <p th:text="${seatDetail.personPerSeat} + '人席'"></p>
-                    <input type="hidden" name="seatDetailId" th:value="${seatDetail.id}">
+                <h3 class="text-center my-4">予約が完了しました。</h3>
+                <div class="text-center">
+                    <p th:text="'レストラン名：' + ${reservation.restaurant.name}"></p>
+                    <p th:text="'予約日時：' + ${#temporals.format(reservation.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
+                    <p th:text="'予約人数：' + ${reservation.numberOfGuests} + '人'"></p>
                     <div class="d-grid gap-2 mt-4 mb-0">
-                        <input type="submit" class="btn btn-primary" value="予約">
+                        <a class="btn btn-primary" th:href="@{/reservation-list}">予約一覧</a>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
