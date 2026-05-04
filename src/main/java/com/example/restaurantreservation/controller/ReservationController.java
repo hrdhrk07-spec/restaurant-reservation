@@ -2,7 +2,6 @@ package com.example.restaurantreservation.controller;
 
 import com.example.restaurantreservation.entity.*;
 import com.example.restaurantreservation.form.ReservationForm;
-import com.example.restaurantreservation.repository.UserRepository;
 import com.example.restaurantreservation.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -198,6 +197,32 @@ public class ReservationController {
         } else {
             return "redirect:/restaurant-list";
         }
+    }
+
+    /**
+     * 予約一覧画面の表示
+     *
+     * @param userDetails   ユーザ情報
+     * @param model         Modelオブジェクト
+     * @return レストラン一覧画面のテンプレートパス
+     */
+    @GetMapping("/reservation-list")
+    public String list(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+
+        // メールアドレスからユーザを取得
+        Optional<User> optionalUser = userService.getUserByEmail(email);
+
+        // 取得できたとき
+        if(optionalUser.isPresent()){
+
+            // ユーザをセット
+            User user = optionalUser.get();
+
+            // ユーザの予約情報を取得
+
+        }
+
     }
 
 }
