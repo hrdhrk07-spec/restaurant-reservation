@@ -5,18 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>レストラン予約システム - 予約完了</title>
+    <title>レストラン予約システム - キャンセル完了</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="row row-cols-1">
         <div class="col">
             <div>
-                <h3 class="text-center my-4">予約が完了しました。</h3>
+                <h3 class="text-center my-4">予約をキャンセルしました。</h3>
                 <div class="text-center">
-                    <p th:text="'レストラン名：' + ${reservation.restaurant.name}"></p>
-                    <p th:text="'予約日時：' + ${#temporals.format(reservation.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
-                    <p th:text="'予約人数：' + ${reservation.numberOfGuests} + '人'"></p>
                     <div class="d-grid gap-2 mt-4 mb-0">
                         <a class="btn btn-primary" th:href="@{/reservation-list}">予約一覧</a>
                     </div>

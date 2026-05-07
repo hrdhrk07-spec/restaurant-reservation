@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,22 +27,22 @@ public class ReservationService {
     private final SeatDetailRepository seatDetailRepository;
 
     /**
-     * 予約の全件取得
+     * IDに一致する予約を1件取得
      *
-     * @return 予約のリスト
+     * @return 予約
      */
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public Optional<Reservation> getReservationById(Long id) {
+        return reservationRepository.findById(id);
     }
 
     /**
-     * IDに一致する予約の全件取得
+     * ユーザIDに一致する予約の全件取得
      *
      * @param userId ユーザID
      * @return 予約のリスト
      */
     public List<Reservation> getReservationsByUserId(Long userId) {
-        return reservationRepository.findByUserId(userId);
+        return reservationRepository.findByUserIdOrderByReservedAtDesc(userId);
     }
 
     /**
@@ -80,6 +81,21 @@ public class ReservationService {
      */
     public Reservation saveReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
+    }
+
+    /**
+     * 予約のキャンセル
+     *
+     * @param reservation 予約
+     */
+    public void cancelReservation(Reservation reservation) {
+
+        // ステータスをキャンセルにセット
+        reservation.setStatus(ReservationStatus.CANCELLED);
+
+        // 予約情報を更新
+        reservationRepository.save(reservation);
+
     }
 
 }

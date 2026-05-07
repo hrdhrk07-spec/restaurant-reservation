@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findByUserId(Long userId);
+    List<Reservation> findByUserIdOrderByReservedAtDesc(Long userId);
 
     @Query(value = "SELECT COUNT(*) "
             + "FROM reservations r "

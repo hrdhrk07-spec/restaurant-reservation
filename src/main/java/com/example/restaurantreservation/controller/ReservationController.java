@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -202,8 +203,8 @@ public class ReservationController {
     /**
      * 予約一覧画面の表示
      *
-     * @param userDetails   ユーザ情報
-     * @param model         Modelオブジェクト
+     * @param userDetails ユーザ情報
+     * @param model       Modelオブジェクト
      * @return レストラン一覧画面のテンプレートパス
      */
     @GetMapping("/reservation-list")
@@ -213,14 +214,71 @@ public class ReservationController {
         // メールアドレスからユーザを取得
         Optional<User> optionalUser = userService.getUserByEmail(email);
 
-        // 取得できたとき
-        if(optionalUser.isPresent()){
+        // ユーザをセット
+        // 後で例外処理を考える
+        User user = optionalUser.orElseThrow();
 
-            // ユーザをセット
-            User user = optionalUser.get();
+        // ユーザの予約情報を取得してmodelにセット
+        model.addAttribute("reservationList", reservationService.getReservationsByUserId(user.getId()));
 
-            // ユーザの予約情報を取得
+        return "user/reservation-list";
 
+    }
+
+    /**
+     * キャンセル確認画面の表示
+     *
+     * @param userDetails ユーザ情報
+     * @param id          パスから取得したid
+     * @param model       Modelオブジェクト
+     * @return キャンセル確認画面のテンプレートパス
+     */
+    @GetMapping("/cancel-confirm/{id}")
+    public String cancelConfirm(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("id") Long id, Model model) {
+        String email = userDetails.getUsername();
+
+        // ユーザをセット
+        // 後で例外処理を考える
+        User user = userService.getUserByEmail(email).orElseThrow();
+
+        // idから予約情報を取得
+        Reservation reservation = reservationService.getReservationById(id).orElseThrow();
+
+        // 取得した予約情報が現在のユーザのものであるかをチェック
+        if (Objects.equals(reservation.getUser().getId(), user.getId())) {
+            model.addAttribute("reservation", reservation);
+            return "user/cancel-confirm";
+        } else {
+            return "redirect:/reservation-list";
+        }
+
+    }
+
+    /**
+     * キャンセル完了画面の表示
+     *
+     * @param userDetails ユーザ情報
+     * @param id          予約ID
+     * @param model       Modelオブジェクト
+     * @return レストラン一覧画面のテンプレートパス
+     */
+    @PostMapping("/cancel-complete")
+    public String cancelPost(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("id") Long id, Model model) {
+        String email = userDetails.getUsername();
+
+        // ユーザをセット
+        // 後で例外処理を考える
+        User user = userService.getUserByEmail(email).orElseThrow();
+
+        // idから予約情報を取得
+        Reservation reservation = reservationService.getReservationById(id).orElseThrow();
+
+        // 取得した予約情報が現在のユーザのものであるかをチェック
+        if (Objects.equals(reservation.getUser().getId(), user.getId())) {
+            reservationService.cancelReservation(reservation);
+            return "user/cancel-complete";
+        } else {
+            return "redirect:/reservation-list";
         }
 
     }

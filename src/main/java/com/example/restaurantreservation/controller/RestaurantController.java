@@ -44,7 +44,7 @@ public class RestaurantController {
     /**
      * レストラン詳細画面の表示
      *
-     * @param id パスから取得したid
+     * @param id    パスから取得したid
      * @param model Modelオブジェクト
      * @return レストラン詳細画面のテンプレートパス
      */
