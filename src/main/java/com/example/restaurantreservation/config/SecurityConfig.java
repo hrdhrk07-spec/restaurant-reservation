@@ -1,5 +1,7 @@
 package com.example.restaurantreservation.config;
 
+import com.example.restaurantreservation.handler.CustomAuthenticationSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,8 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
  * Spring Securityの設定を記載したコンフィグクラス
  */
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     /**
      * 認証に関する設定
@@ -42,11 +47,12 @@ public class SecurityConfig {
                         // メールアドレスで認証するよう設定
                         .usernameParameter("email")
 
-                        // ログイン成功時のリダイレクト先
-                        .defaultSuccessUrl("/home", true) // trueにすることで常に/homeにリダイレクト
+                        // ログイン成功時の権限によるリダイレクト先の指定
+                        .successHandler(customAuthenticationSuccessHandler)
 
                         // ログイン失敗時のリダイレクト先
                         .failureUrl("/login?error")
+
                 )
                 .logout(logout -> logout
                         // ログアウトのURL

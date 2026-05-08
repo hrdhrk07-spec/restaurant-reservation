@@ -1,7 +1,10 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.Restaurant;
+import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.form.RestaurantForm;
 import com.example.restaurantreservation.repository.RestaurantRepository;
+import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final SeatDetailRepository seatDetailRepository;
 
     /**
      * レストランの全件取得
@@ -87,11 +91,32 @@ public class RestaurantService {
     /**
      * レストランの登録
      *
-     * @param restaurant レストラン
-     * @return 登録したレストラン
+     * @param restaurantForm レストラン登録フォーム
      */
-    public Restaurant saveRestaurant(Restaurant restaurant) {
-        return restaurantRepository.save(restaurant);
+    public void saveRestaurant(RestaurantForm restaurantForm) {
+        // フォームからRestaurantエンティティに値を設定
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantForm.getName());
+        restaurant.setCuisineType(restaurantForm.getCuisineType());
+        restaurant.setLocation(restaurantForm.getLocation());
+        restaurant.setImagePath(restaurantForm.getImagePath());
+        restaurant.setHolidays(restaurantForm.getHolidays());
+        restaurant.setReceptionStartTime(restaurantForm.getReceptionStartTime());
+        restaurant.setReceptionEndTime(restaurantForm.getReceptionEndTime());
+
+        // レストランを登録
+        restaurant = restaurantRepository.save(restaurant);
+
+        // フォームからSeatDetailエンティティに値を設定
+        SeatDetail seatDetail = new SeatDetail();
+        seatDetail.setRestaurant(restaurant);
+        seatDetail.setPersonPerSeat(restaurantForm.getSeatDetail().getPersonPerSeat());
+        seatDetail.setNumberOfSeats(restaurantForm.getSeatDetail().getNumberOfSeats());
+        seatDetail.setDuration(restaurantForm.getSeatDetail().getDuration());
+
+        // 登録
+        seatDetailRepository.save(seatDetail);
+
     }
 
     /**
