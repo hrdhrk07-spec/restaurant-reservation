@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * 管理者用レストラン関連のコントローラークラス
+ * 管理者用レストラン管理のコントローラークラス
  */
 @Controller
 @RequestMapping("/admin")

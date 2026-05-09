@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,6 +45,15 @@ public class ReservationService {
     }
 
     /**
+     * 予約の全件取得
+     *
+     * @return 予約のリスト
+     */
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
+
+    /**
      * 予約時の空席確認
      *
      * @param restaurantId   レストランID
@@ -77,10 +85,9 @@ public class ReservationService {
      * 予約の登録
      *
      * @param reservation 予約
-     * @return 登録した予約
      */
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public void saveReservation(Reservation reservation) {
+        reservationRepository.save(reservation);
     }
 
     /**
@@ -96,6 +103,19 @@ public class ReservationService {
         // 予約情報を更新
         reservationRepository.save(reservation);
 
+    }
+
+    /**
+     * 予約のステータス更新
+     *
+     * @param id     予約ID
+     * @param status ステータス
+     */
+    public void changeReservationStatus(Long id, ReservationStatus status) {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        Reservation reservation = optionalReservation.orElseThrow();
+        reservation.setStatus(status);
+        reservationRepository.save(reservation);
     }
 
 }

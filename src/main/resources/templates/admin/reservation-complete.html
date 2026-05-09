@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin-layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理者 - レストラン予約システム - 予約ステータス変更完了</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row row-cols-1">
+        <div class="col">
+            <div>
+                <h3 class="text-center my-4">変更完了しました。</h3>
+                <div class="text-center">
+                    <div class="d-grid gap-2 mt-4 mb-0">
+                        <a class="btn btn-primary" th:href="@{/admin/reservation-list}">予約一覧</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

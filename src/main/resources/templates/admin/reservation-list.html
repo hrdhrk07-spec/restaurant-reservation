@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin-layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理者 - レストラン予約システム - 予約管理</title>
+</head>
+<body>
+    <div class="container-fluid px-4" layout:fragment="content">
+        <h1 class="mt-4">予約一覧</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                予約テーブル
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>user</th>
+                        <th>restaurant</th>
+                        <th>seatDetail</th>
+                        <th>reservedAt</th>
+                        <th>status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>id</th>
+                        <th>user</th>
+                        <th>restaurant</th>
+                        <th>seatDetail</th>
+                        <th>reservedAt</th>
+                        <th>status</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr th:each="reservation : ${reservationList}">
+                        <td th:text="${reservation.id}"></td>
+                        <td th:text="${reservation.user.name}"></td>
+                        <td th:text="${reservation.restaurant.name}"></td>
+                        <td th:text="${reservation.seatDetail.personPerSeat + '人席'}"></td>
+                        <td th:text="${#temporals.format(reservation.reservedAt, 'yyyy/MM/dd HH:mm')}"></td>
+                        <td th:text="${reservation.status}"></td>
+                        <td><a class="btn btn-primary"
+                               th:href="@{/admin/reservation-change/{id}(id=${reservation.id})}">変更</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
