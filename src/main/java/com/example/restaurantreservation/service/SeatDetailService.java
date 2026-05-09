@@ -22,7 +22,7 @@ public class SeatDetailService {
     /**
      * IDに一致する席詳細を1件取得
      *
-     * @param id    席詳細ID
+     * @param id 席詳細ID
      * @return 席詳細
      */
     public Optional<SeatDetail> getSeatDetailById(Long id) {
@@ -47,15 +47,6 @@ public class SeatDetailService {
      */
     public SeatDetail saveSeatDetail(SeatDetail seatDetail) {
         return seatDetailRepository.save(seatDetail);
-    }
-
-    /**
-     * IDに一致した席詳細の削除
-     *
-     * @param id 席詳細ID
-     */
-    public void deleteSeatDetail(Long id) {
-        seatDetailRepository.deleteById(id);
     }
 
 }

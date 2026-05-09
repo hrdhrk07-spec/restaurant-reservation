@@ -18,4 +18,5 @@ public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long>  {
             @Param("restaurantId") Long restaurantId,
             @Param("numberOfGuests") int numberOfGuests
     );
+    void deleteByRestaurantId(Long restaurantId);
 }

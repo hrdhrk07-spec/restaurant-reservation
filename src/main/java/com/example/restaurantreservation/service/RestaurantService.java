@@ -3,6 +3,7 @@ package com.example.restaurantreservation.service;
 import com.example.restaurantreservation.entity.Restaurant;
 import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.form.RestaurantForm;
+import com.example.restaurantreservation.form.SeatDetailForm;
 import com.example.restaurantreservation.repository.RestaurantRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -89,11 +90,49 @@ public class RestaurantService {
     }
 
     /**
-     * レストランの登録
+     * レストラン登録フォームに値をセット
      *
+     * @param id             レストランID
      * @param restaurantForm レストラン登録フォーム
      */
-    public void saveRestaurant(RestaurantForm restaurantForm) {
+    public void setRestaurantForm(Long id, RestaurantForm restaurantForm) {
+        // IDからレストラン情報を取得
+        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
+        Restaurant restaurant = optionalRestaurant.orElseThrow();
+
+        // レストラン登録フォームに値をセット
+        restaurantForm.setName(restaurant.getName());
+        restaurantForm.setCuisineType(restaurant.getCuisineType());
+        restaurantForm.setLocation(restaurant.getLocation());
+        restaurantForm.setImagePath(restaurant.getImagePath());
+        restaurantForm.setHolidays(restaurant.getHolidays());
+        restaurantForm.setReceptionStartTime(restaurant.getReceptionStartTime());
+        restaurantForm.setReceptionEndTime(restaurant.getReceptionEndTime());
+
+        // レストランIDから席詳細情報を取得
+        // 一旦リストの最初の席詳細だけを扱う
+        List<SeatDetail> seatDetailList = seatDetailRepository.findByRestaurantId(id);
+        SeatDetail seatDetail = seatDetailList.getFirst();
+
+        // 席詳細フォームに値をセット
+        SeatDetailForm seatDetailForm = new SeatDetailForm();
+        seatDetailForm.setId(seatDetail.getId());
+        seatDetailForm.setPersonPerSeat(seatDetail.getPersonPerSeat());
+        seatDetailForm.setNumberOfSeats(seatDetail.getNumberOfSeats());
+        seatDetailForm.setDuration(seatDetail.getDuration());
+
+        // レストラン登録フォームに席詳細フォームをセット
+        restaurantForm.setSeatDetail(seatDetailForm);
+
+    }
+
+    /**
+     * レストランの登録
+     *
+     * @param restaurantForm    レストラン登録フォーム
+     * @param id                レストランID
+     */
+    public void saveRestaurant(RestaurantForm restaurantForm, Long id) {
         // フォームからRestaurantエンティティに値を設定
         Restaurant restaurant = new Restaurant();
         restaurant.setName(restaurantForm.getName());
@@ -104,6 +143,11 @@ public class RestaurantService {
         restaurant.setReceptionStartTime(restaurantForm.getReceptionStartTime());
         restaurant.setReceptionEndTime(restaurantForm.getReceptionEndTime());
 
+        // 更新処理の場合のみIDをセット
+        if (id != null) {
+            restaurant.setId(id);
+        }
+
         // レストランを登録
         restaurant = restaurantRepository.save(restaurant);
 
@@ -113,6 +157,11 @@ public class RestaurantService {
         seatDetail.setPersonPerSeat(restaurantForm.getSeatDetail().getPersonPerSeat());
         seatDetail.setNumberOfSeats(restaurantForm.getSeatDetail().getNumberOfSeats());
         seatDetail.setDuration(restaurantForm.getSeatDetail().getDuration());
+
+        // 更新処理の場合のみIDをセット
+        if (restaurantForm.getSeatDetail().getId() != null) {
+            seatDetail.setId(restaurantForm.getSeatDetail().getId());
+        }
 
         // 登録
         seatDetailRepository.save(seatDetail);
@@ -125,6 +174,7 @@ public class RestaurantService {
      * @param id レストランID
      */
     public void deleteRestaurant(Long id) {
+        seatDetailRepository.deleteByRestaurantId(id);
         restaurantRepository.deleteById(id);
     }
 

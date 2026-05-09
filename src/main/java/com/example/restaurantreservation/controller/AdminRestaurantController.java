@@ -62,7 +62,63 @@ public class AdminRestaurantController {
         }
 
         //　登録
-        restaurantService.saveRestaurant(restaurantForm);
+        restaurantService.saveRestaurant(restaurantForm, null);
+        return "redirect:/admin/restaurant-complete";
+
+    }
+
+    /**
+     * レストラン編集画面の表示
+     *
+     * @param id    レストランID
+     * @param model Modelオブジェクト
+     * @return レストラン編集画面のテンプレートパス
+     */
+    @GetMapping("/restaurant-edit/{id}")
+    public String edit(@PathVariable Long id, Model model) {
+        RestaurantForm restaurantForm = new RestaurantForm();
+        restaurantService.setRestaurantForm(id, restaurantForm);
+        model.addAttribute("restaurantId", id);
+        model.addAttribute("restaurantForm", restaurantForm);
+        return "admin/restaurant-edit";
+    }
+
+    /**
+     * レストラン更新処理
+     *
+     * @param id             レストランID
+     * @param restaurantForm レストラン登録フォーム
+     * @param result         バリデーション結果
+     * @param model          Modelオブジェクト
+     * @return 編集画面または登録完了画面のテンプレートパス
+     */
+    @PostMapping("/restaurant-edit/{id}")
+    public String editPost(
+            @PathVariable Long id,
+            @Valid @ModelAttribute RestaurantForm restaurantForm,
+            BindingResult result,
+            Model model) {
+
+        // バリデーションエラーの場合は再度一覧画面を表示
+        if (result.hasErrors()) {
+            return "admin/restaurant-edit";
+        }
+
+        //　更新
+        restaurantService.saveRestaurant(restaurantForm, id);
+        return "redirect:/admin/restaurant-complete";
+
+    }
+
+    /**
+     * レストラン削除処理
+     *
+     * @param id    レストランID
+     * @return 登録完了画面のテンプレートパス
+     */
+    @PostMapping("/restaurant-delete/{id}")
+    public String deletePost(@PathVariable Long id) {
+        restaurantService.deleteRestaurant(id);
         return "redirect:/admin/restaurant-complete";
     }
 

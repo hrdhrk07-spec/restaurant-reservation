@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class SeatDetailForm {
 
+    private Long id;
+
     @NotNull
     @Min(1)
     private Integer personPerSeat;

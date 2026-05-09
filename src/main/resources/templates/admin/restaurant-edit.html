@@ -5,15 +5,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>管理者 - レストラン予約システム - レストラン新規登録</title>
+    <title>管理者 - レストラン予約システム - レストラン編集</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="row row-cols-1">
         <div class="col">
-            <h3>レストラン新規登録</h3>
+            <h3>レストラン編集</h3>
+            <form method="post" th:action="@{/admin/restaurant-delete/{id}(id=${restaurantId})}">
+                <div class="mt-4 mb-0">
+                    <div class="d-grid"><input type="submit" class="btn btn-primary" value="削除"></div>
+                </div>
+            </form>
             <div>
-                <form th:object="${restaurantForm}" method="post" th:action="@{/admin/restaurant-input}">
+                <form th:object="${restaurantForm}" method="post"
+                      th:action="@{/admin/restaurant-edit/{id}(id=${restaurantId})}">
                     <div class="row mb-3 alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
                         <ul class="mb-0">
                             <li th:each="e : ${#fields.globalErrors()}">[[${e}]]</li>
@@ -52,17 +58,21 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="receptionStartTime" name="receptionStartTime" type="time"
-                               placeholder="17:00" th:field="*{receptionStartTime}" step="1800"/>
+                               placeholder="17:00" step="1800"
+                               th:value="${#temporals.format(restaurantForm.receptionStartTime, 'HH:mm')}"/>
                         <label for="receptionStartTime">受付開始時刻</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="receptionEndTime" name="receptionEndTime" type="time"
-                               placeholder="23:00" th:field="*{receptionEndTime}" step="1800"/>
+                               placeholder="23:00" step="1800"
+                               th:value="${#temporals.format(restaurantForm.receptionEndTime, 'HH:mm')}"/>
                         <label for="receptionEndTime">受付終了時刻</label>
                     </div>
+                    <input type="hidden" th:field="*{seatDetail.id}">
                     <div class="form-floating mb-3">
                         <input th:classappend="${#fields.hasErrors('seatDetail.personPerSeat')} ? 'is-invalid' : ''"
-                               th:field="*{seatDetail.personPerSeat}" class="form-control" id="personPerSeat" type="number"
+                               th:field="*{seatDetail.personPerSeat}" class="form-control" id="personPerSeat"
+                               type="number"
                                min="1" max="100">
                         <label for="personPerSeat">一席あたりの人数 <span class="text-danger">*</span></label>
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.personPerSeat')}"
@@ -70,7 +80,8 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input th:classappend="${#fields.hasErrors('seatDetail.numberOfSeats')} ? 'is-invalid' : ''"
-                               th:field="*{seatDetail.numberOfSeats}" class="form-control" id="numberOfSeats" type="number"
+                               th:field="*{seatDetail.numberOfSeats}" class="form-control" id="numberOfSeats"
+                               type="number"
                                min="1">
                         <label for="numberOfSeats">席セット数 <span class="text-danger">*</span></label>
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.numberOfSeats')}"
@@ -85,7 +96,7 @@
                              th:errors="*{seatDetail.duration}"></div>
                     </div>
                     <div class="mt-4 mb-0">
-                        <div class="d-grid"><input type="submit" class="btn btn-primary" value="新規登録"></div>
+                        <div class="d-grid"><input type="submit" class="btn btn-primary" value="更新"></div>
                     </div>
                 </form>
             </div>
