@@ -1,6 +1,7 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class SeatDetailService {
      * @return 席詳細
      */
     public SeatDetail getSeatDetailById(Long id) {
-        return seatDetailRepository.findById(id).orElseThrow();
+        return seatDetailRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("席詳細取得の失敗 ID:" + id));
     }
 
 }

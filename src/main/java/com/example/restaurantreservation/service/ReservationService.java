@@ -4,6 +4,7 @@ import com.example.restaurantreservation.entity.Reservation;
 import com.example.restaurantreservation.entity.ReservationStatus;
 import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.entity.User;
+import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
@@ -32,7 +33,8 @@ public class ReservationService {
      * @return 予約
      */
     public Reservation getReservationById(Long id) {
-        return reservationRepository.findById(id).orElseThrow();
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("予約取得の失敗 ID:" + id));
     }
 
     /**
@@ -130,7 +132,8 @@ public class ReservationService {
     public void changeReservationStatus(Long id, ReservationStatus status) {
 
         // 予約情報の取得
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("予約取得の失敗 ID:" + id));
 
         // ステータスをセットして登録
         reservation.setStatus(status);

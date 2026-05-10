@@ -1,6 +1,7 @@
 package com.example.restaurantreservation.controller;
 
 import com.example.restaurantreservation.entity.*;
+import com.example.restaurantreservation.exception.UnauthorizedAccessException;
 import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.service.*;
 import jakarta.validation.Valid;
@@ -161,8 +162,8 @@ public class ReservationController {
     /**
      * 予約が現在のユーザのものであるかをチェック
      *
-     * @param email         メールアドレス
-     * @param reservation   予約
+     * @param email       メールアドレス
+     * @param reservation 予約
      * @return 予約が現在のユーザのものであればTrue、そうでなければFalse
      */
     private Boolean shouldCancel(String email, Reservation reservation) {
@@ -194,7 +195,7 @@ public class ReservationController {
             model.addAttribute("reservation", reservation);
             return "user/cancel-confirm";
         } else {
-            return "redirect:/reservation-list";
+            throw new UnauthorizedAccessException("予約ステータス更新の失敗 ユーザ：" + userDetails.getUsername() + " 予約ID：" + id);
         }
 
     }
@@ -218,7 +219,7 @@ public class ReservationController {
             reservationService.cancelReservation(reservation);
             return "user/cancel-complete";
         } else {
-            return "redirect:/reservation-list";
+            throw new UnauthorizedAccessException("予約ステータス更新の失敗 ユーザ：" + userDetails.getUsername() + " 予約ID：" + id);
         }
 
     }

@@ -2,6 +2,7 @@ package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.Restaurant;
 import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.RestaurantForm;
 import com.example.restaurantreservation.form.SeatDetailForm;
 import com.example.restaurantreservation.repository.RestaurantRepository;
@@ -86,7 +87,8 @@ public class RestaurantService {
      * @return レストラン
      */
     public Restaurant getRestaurantById(Long id) {
-        return restaurantRepository.findById(id).orElseThrow();
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("レストラン取得の失敗 ID:" + id));
     }
 
     /**
@@ -97,7 +99,8 @@ public class RestaurantService {
      */
     public void setRestaurantForm(Long id, RestaurantForm restaurantForm) {
         // IDからレストラン情報を取得
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("レストラン取得の失敗 ID:" + id));
 
         // レストラン登録フォームに値をセット
         restaurantForm.setName(restaurant.getName());

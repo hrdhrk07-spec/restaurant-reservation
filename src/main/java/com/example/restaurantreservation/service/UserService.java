@@ -2,6 +2,7 @@ package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.User;
 import com.example.restaurantreservation.entity.UserRole;
+import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,8 @@ public class UserService {
      * @return ユーザ
      */
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザ取得の失敗 email:" + email));
     }
 
     /**
