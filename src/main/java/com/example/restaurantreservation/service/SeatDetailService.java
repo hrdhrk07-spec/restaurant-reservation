@@ -25,28 +25,8 @@ public class SeatDetailService {
      * @param id 席詳細ID
      * @return 席詳細
      */
-    public Optional<SeatDetail> getSeatDetailById(Long id) {
-        return seatDetailRepository.findById(id);
-    }
-
-    /**
-     * レストランIDに一致する席詳細の全件取得
-     *
-     * @param restaurantId レストランID
-     * @return 席詳細のリスト
-     */
-    public List<SeatDetail> getAllSeatDetailsByRestaurantId(Long restaurantId) {
-        return seatDetailRepository.findByRestaurantId(restaurantId);
-    }
-
-    /**
-     * 席詳細の登録
-     *
-     * @param seatDetail 席詳細
-     * @return 登録した席詳細
-     */
-    public SeatDetail saveSeatDetail(SeatDetail seatDetail) {
-        return seatDetailRepository.save(seatDetail);
+    public SeatDetail getSeatDetailById(Long id) {
+        return seatDetailRepository.findById(id).orElseThrow();
     }
 
 }

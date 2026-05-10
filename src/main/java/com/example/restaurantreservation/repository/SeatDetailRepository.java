@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long>  {
+public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long> {
     List<SeatDetail> findByRestaurantId(Long restaurantId);
+
     @Query("SELECT s "
             + "FROM SeatDetail s "
             + "WHERE s.restaurant.id = :restaurantId "
@@ -18,5 +18,6 @@ public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long>  {
             @Param("restaurantId") Long restaurantId,
             @Param("numberOfGuests") int numberOfGuests
     );
+
     void deleteByRestaurantId(Long restaurantId);
 }

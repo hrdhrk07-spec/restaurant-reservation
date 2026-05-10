@@ -44,10 +44,10 @@
             </div>
             <div th:if="${hasSeats}">
                 <form method="post" th:action="@{/reservation-confirm}">
-                    <div th:each="seatDetail : ${seatDetailList}">
+                    <div th:each="seatDetail, iterStat : ${seatDetailList}">
                         <input class="form-check-input" type="radio" th:name="seatDetailId"
                                th:id="'seatDetailId_' + ${seatDetail.id}"
-                               th:value="${seatDetail.id}">
+                               th:value="${seatDetail.id}" th:checked="${iterStat.index == 0}">
                         <label class="form-check-label" th:for="'seatDetailId_' + ${seatDetail.id}">
                             [[${seatDetail.personPerSeat}]]人席
                         </label>

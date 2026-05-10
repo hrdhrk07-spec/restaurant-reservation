@@ -1,14 +1,10 @@
 package com.example.restaurantreservation.controller;
 
-import com.example.restaurantreservation.entity.Restaurant;
-import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 /**
  * ホーム画面のコントローラークラス

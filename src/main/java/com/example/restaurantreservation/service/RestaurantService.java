@@ -85,8 +85,8 @@ public class RestaurantService {
      * @param id レストランID
      * @return レストラン
      */
-    public Optional<Restaurant> getRestaurantById(Long id) {
-        return restaurantRepository.findById(id);
+    public Restaurant getRestaurantById(Long id) {
+        return restaurantRepository.findById(id).orElseThrow();
     }
 
     /**
@@ -97,8 +97,7 @@ public class RestaurantService {
      */
     public void setRestaurantForm(Long id, RestaurantForm restaurantForm) {
         // IDからレストラン情報を取得
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
-        Restaurant restaurant = optionalRestaurant.orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
 
         // レストラン登録フォームに値をセット
         restaurantForm.setName(restaurant.getName());
@@ -111,8 +110,7 @@ public class RestaurantService {
 
         // レストランIDから席詳細情報を取得
         // 一旦リストの最初の席詳細だけを扱う
-        List<SeatDetail> seatDetailList = seatDetailRepository.findByRestaurantId(id);
-        SeatDetail seatDetail = seatDetailList.getFirst();
+        SeatDetail seatDetail = seatDetailRepository.findByRestaurantId(id).getFirst();
 
         // 席詳細フォームに値をセット
         SeatDetailForm seatDetailForm = new SeatDetailForm();
@@ -129,10 +127,11 @@ public class RestaurantService {
     /**
      * レストランの登録
      *
-     * @param restaurantForm    レストラン登録フォーム
-     * @param id                レストランID
+     * @param restaurantForm レストラン登録フォーム
+     * @param id             レストランID
      */
     public void saveRestaurant(RestaurantForm restaurantForm, Long id) {
+
         // フォームからRestaurantエンティティに値を設定
         Restaurant restaurant = new Restaurant();
         restaurant.setName(restaurantForm.getName());
@@ -142,11 +141,7 @@ public class RestaurantService {
         restaurant.setHolidays(restaurantForm.getHolidays());
         restaurant.setReceptionStartTime(restaurantForm.getReceptionStartTime());
         restaurant.setReceptionEndTime(restaurantForm.getReceptionEndTime());
-
-        // 更新処理の場合のみIDをセット
-        if (id != null) {
-            restaurant.setId(id);
-        }
+        restaurant.setId(id);
 
         // レストランを登録
         restaurant = restaurantRepository.save(restaurant);
@@ -157,11 +152,7 @@ public class RestaurantService {
         seatDetail.setPersonPerSeat(restaurantForm.getSeatDetail().getPersonPerSeat());
         seatDetail.setNumberOfSeats(restaurantForm.getSeatDetail().getNumberOfSeats());
         seatDetail.setDuration(restaurantForm.getSeatDetail().getDuration());
-
-        // 更新処理の場合のみIDをセット
-        if (restaurantForm.getSeatDetail().getId() != null) {
-            seatDetail.setId(restaurantForm.getSeatDetail().getId());
-        }
+        seatDetail.setId(restaurantForm.getSeatDetail().getId());
 
         // 登録
         seatDetailRepository.save(seatDetail);

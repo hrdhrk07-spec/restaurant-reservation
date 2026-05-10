@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
-
 /**
  * レストラン関連のコントローラークラス
  */
@@ -37,7 +35,7 @@ public class RestaurantController {
         model.addAttribute("location", location);
         model.addAttribute("cuisineType", cuisineType);
         model.addAttribute("name", name);
-        model.addAttribute("restaurantList",restaurantService.getRestaurants(location, cuisineType, name));
+        model.addAttribute("restaurantList", restaurantService.getRestaurants(location, cuisineType, name));
         return "user/restaurant-list";
     }
 
@@ -50,19 +48,9 @@ public class RestaurantController {
      */
     @GetMapping("/restaurant-detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
-        // idからレストランを取得
-        Optional<Restaurant> optionalRestaurant = restaurantService.getRestaurantById(id);
-
-        // 取得できたときのみmodelに値を追加
-        if (optionalRestaurant.isPresent()) {
-            Restaurant restaurant = optionalRestaurant.get();
-            model.addAttribute("restaurant", restaurant);
-            return "user/restaurant-detail";
-        }else{
-            return "redirect:/restaurant-list";
-        }
-
-
+        Restaurant restaurant = restaurantService.getRestaurantById(id);
+        model.addAttribute("restaurant", restaurant);
+        return "user/restaurant-detail";
     }
 
 }

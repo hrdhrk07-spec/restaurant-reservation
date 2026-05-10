@@ -1,12 +1,14 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.User;
+import com.example.restaurantreservation.entity.UserRole;
+import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,24 +20,16 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
-     * ユーザの全件取得
+     * メールアドレスに一致するユーザを1件取得（認証用）
      *
-     * @return ユーザのリスト
-     */
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    /**
-     * IDに一致するユーザを1件取得
-     *
-     * @param id ユーザID
+     * @param email メールアドレス
      * @return ユーザ
      */
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -44,27 +38,42 @@ public class UserService {
      * @param email メールアドレス
      * @return ユーザ
      */
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow();
+    }
+
+    /**
+     * ユーザの登録
+     *
+     * @param registerForm ユーザ登録フォーム
+     */
+    public void saveUser(RegisterForm registerForm) {
+
+        // フォームからUserエンティティに値を設定
+        User user = new User();
+        user.setName(registerForm.getName());
+        user.setPhoneNumber(registerForm.getPhoneNumber());
+        user.setEmail(registerForm.getEmail().toLowerCase());   // 小文字変換
+        user.setPassword(registerForm.getPassword());
+
+        // パスワードの暗号化
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // ロールの設定
+        user.setRole(UserRole.USER);
+
+        // 登録
+        userRepository.save(user);
+
     }
 
     /**
      * ユーザの登録
      *
      * @param user ユーザ
-     * @return 登録したユーザ
      */
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    /**
-     * IDに一致したユーザの削除
-     *
-     * @param id ユーザID
-     */
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
     /**

@@ -1,12 +1,9 @@
 package com.example.restaurantreservation.controller;
 
-import com.example.restaurantreservation.entity.User;
-import com.example.restaurantreservation.entity.UserRole;
 import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     /**
      * ログイン画面の表示
@@ -61,28 +57,16 @@ public class AuthController {
             return "auth/register";
         }
 
-        // フォームからUserエンティティに値を設定
-        User user = new User();
-        user.setName(registerForm.getName());
-        user.setPhoneNumber(registerForm.getPhoneNumber());
-        user.setEmail(registerForm.getEmail().toLowerCase());   // 小文字変換
-        user.setPassword(registerForm.getPassword());
-
         // 登録済みのメールアドレスの場合は再度登録画面を表示
-        if (userService.existsByEmail(user.getEmail())) {
+        if (userService.existsByEmail(registerForm.getEmail().toLowerCase())) {
             model.addAttribute("errorMessage", "このメールアドレスは既に登録されています");
             return "auth/register";
         }
 
-        // パスワードの暗号化
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // ロールの設定
-        user.setRole(UserRole.USER);
-
         //　登録
-        userService.saveUser(user);
+        userService.saveUser(registerForm);
         return "redirect:/register/complete";
+
     }
 
     /**

@@ -1,14 +1,11 @@
 package com.example.restaurantreservation.controller;
 
-import com.example.restaurantreservation.entity.Reservation;
 import com.example.restaurantreservation.entity.ReservationStatus;
 import com.example.restaurantreservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 
 /**
@@ -29,7 +26,6 @@ public class AdminReservationController {
      */
     @GetMapping("/reservation-list")
     public String list(Model model) {
-        // Modelに予約の全件リストを追加
         model.addAttribute("reservationList", reservationService.getAllReservations());
         return "admin/reservation-list";
     }
@@ -43,9 +39,7 @@ public class AdminReservationController {
      */
     @GetMapping("/reservation-change/{id}")
     public String change(@PathVariable Long id, Model model) {
-        Optional<Reservation> optionalReservation = reservationService.getReservationById(id);
-        Reservation reservation = optionalReservation.orElseThrow();
-        model.addAttribute("reservation", reservation);
+        model.addAttribute("reservation", reservationService.getReservationById(id));
         return "admin/reservation-change";
     }
 

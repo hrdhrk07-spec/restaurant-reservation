@@ -3,6 +3,8 @@ package com.example.restaurantreservation.service;
 import com.example.restaurantreservation.entity.Reservation;
 import com.example.restaurantreservation.entity.ReservationStatus;
 import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.entity.User;
+import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,8 +31,8 @@ public class ReservationService {
      *
      * @return 予約
      */
-    public Optional<Reservation> getReservationById(Long id) {
-        return reservationRepository.findById(id);
+    public Reservation getReservationById(Long id) {
+        return reservationRepository.findById(id).orElseThrow();
     }
 
     /**
@@ -62,6 +63,7 @@ public class ReservationService {
      * @return 席詳細のリスト
      */
     public List<SeatDetail> getAvailableSeats(Long restaurantId, LocalDateTime reservedAt, int numberOfGuests) {
+
         // 予約人数から利用可能な席詳細を取得
         List<SeatDetail> seatDetailList = seatDetailRepository.findAvailableSeatsByRestaurantAndGuests(restaurantId, numberOfGuests);
 
@@ -84,10 +86,24 @@ public class ReservationService {
     /**
      * 予約の登録
      *
-     * @param reservation 予約
+     * @param user            ユーザ
+     * @param seatDetail      席詳細
+     * @param reservationForm 予約登録フォーム
      */
-    public void saveReservation(Reservation reservation) {
-        reservationRepository.save(reservation);
+    public Reservation saveReservation(User user, SeatDetail seatDetail, ReservationForm reservationForm) {
+
+        // 予約情報をセット
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setSeatDetail(seatDetail);
+        reservation.setRestaurant(seatDetail.getRestaurant());
+        reservation.setReservedAt(reservationForm.getReservedAt());
+        reservation.setNumberOfGuests(reservationForm.getNumberOfGuests());
+        reservation.setStatus(ReservationStatus.PENDING);
+
+        // 登録
+        return reservationRepository.save(reservation);
+
     }
 
     /**
@@ -112,8 +128,11 @@ public class ReservationService {
      * @param status ステータス
      */
     public void changeReservationStatus(Long id, ReservationStatus status) {
-        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        Reservation reservation = optionalReservation.orElseThrow();
+
+        // 予約情報の取得
+        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+
+        // ステータスをセットして登録
         reservation.setStatus(status);
         reservationRepository.save(reservation);
     }

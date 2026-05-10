@@ -1,7 +1,7 @@
 package com.example.restaurantreservation.listener;
 
 import com.example.restaurantreservation.entity.User;
-import com.example.restaurantreservation.repository.UserRepository;
+import com.example.restaurantreservation.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationFailureListener implements ApplicationListener<AbstractAuthenticationFailureEvent> {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * 認証失敗時に連続ログイン失敗回数とロック日時を更新
@@ -27,7 +27,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Abstra
     @Override
     public void onApplicationEvent(AbstractAuthenticationFailureEvent event) {
         // メールアドレスでユーザを検索
-        Optional<User> optionalUser = userRepository.findByEmail(event.getAuthentication().getName());
+        Optional<User> optionalUser = userService.findUserByEmail(event.getAuthentication().getName());
 
         // ユーザが見つかったときだけ処理
         if (optionalUser.isPresent()) {
@@ -45,7 +45,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Abstra
             }
 
             // 登録
-            userRepository.save(user);
+            userService.saveUser(user);
         }
     }
 }

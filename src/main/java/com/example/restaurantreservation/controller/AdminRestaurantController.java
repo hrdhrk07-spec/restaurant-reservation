@@ -28,7 +28,6 @@ public class AdminRestaurantController {
      */
     @GetMapping("/restaurant-list")
     public String list(Model model) {
-        // Modelにレストランの全件リストを追加
         model.addAttribute("restaurantList", restaurantService.getAllRestaurants());
         return "admin/restaurant-list";
     }
@@ -61,7 +60,7 @@ public class AdminRestaurantController {
             return "admin/restaurant-input";
         }
 
-        //　登録
+        //　登録（登録時は引数のレストランIDをnullとする）
         restaurantService.saveRestaurant(restaurantForm, null);
         return "redirect:/admin/restaurant-complete";
 
@@ -76,8 +75,10 @@ public class AdminRestaurantController {
      */
     @GetMapping("/restaurant-edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
+        // レストラン登録フォームに値をセット
         RestaurantForm restaurantForm = new RestaurantForm();
         restaurantService.setRestaurantForm(id, restaurantForm);
+
         model.addAttribute("restaurantId", id);
         model.addAttribute("restaurantForm", restaurantForm);
         return "admin/restaurant-edit";
