@@ -23,7 +23,7 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model) {
         model.addAttribute("restaurantList", restaurantService.getNewTenRestaurants());
-        model.addAttribute("isHome", true);
+        model.addAttribute("showSearch", true);
         return "user/home";
     }
 

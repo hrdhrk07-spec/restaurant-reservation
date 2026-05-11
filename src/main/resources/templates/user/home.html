@@ -9,62 +9,32 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container-fluid mt-1 p-2">
-        <form method="GET" th:action="@{/restaurant-list}">
-            <div class="row g-1">
-                <div class="col-auto">
-                    <select name="location" id="location" class="form-select">
-                        <option value="">--都道府県--</option>
-                        <option value="三重県">三重</option>
-                        <option value="滋賀県">滋賀</option>
-                        <option value="京都府">京都</option>
-                        <option value="奈良県">奈良</option>
-                        <option value="和歌山県">和歌山</option>
-                        <option value="大阪府">大阪</option>
-                        <option value="兵庫県">兵庫</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <select name="cuisineType" id="cuisineType" class="form-select">
-                        <option value="">--ジャンル--</option>
-                        <option value="和食">和食</option>
-                        <option value="洋食">洋食</option>
-                        <option value="イタリアン">イタリアン</option>
-                        <option value="フレンチ">フレンチ</option>
-                        <option value="中華">中華</option>
-                        <option value="アジア・エスニック">アジア・エスニック</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <input class="form-control" id="name" name="name" placeholder="レストラン名を入力"/>
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">検索</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="row row-cols-3 row-cols-md-3 g-4" th:if="${!#lists.isEmpty(restaurantList)}">
-        <div class="col" th:each="restaurant : ${restaurantList}">
-            <a th:href="@{/restaurant-detail/{id}(id=${restaurant.id})}">
-                <div class="card">
-                    <img th:if="${restaurant.imagePath != null}"
-                         th:src="@{'/images/' + ${restaurant.imagePath}}"
-                         class="card-img-top" alt="no image">
-                    <div class="card-body">
-                        <h5 class="card-title" th:if="${restaurant.name != null}"
-                            th:text="${restaurant.name}"></h5>
-                        <p class="card-text" th:if="${restaurant.cuisineType != null}"
-                           th:text="${restaurant.cuisineType}"></p>
-                        <p class="card-text" th:if="${restaurant.location != null}"
-                           th:text="${restaurant.location}"></p>
+    <div class="container-fluid">
+        <div class="row row-cols-3 row-cols-md-3 g-4" th:if="${!#lists.isEmpty(restaurantList)}">
+            <div class="col" th:each="restaurant : ${restaurantList}">
+                <a th:href="@{/restaurant-detail/{id}(id=${restaurant.id})}">
+                    <div class="card h-100">
+                        <img th:if="${restaurant.imagePath != null}"
+                             th:src="@{'/images/' + ${restaurant.imagePath}}"
+                             class="card-img-top" alt="no image">
+                        <img th:unless="${restaurant.imagePath != null}"
+                             th:src="@{'/images/noimage.jpg'}"
+                             class="card-img-top" alt="no image">
+                        <div class="card-body">
+                            <h5 class="card-title" th:if="${restaurant.name != null}"
+                                th:text="${restaurant.name}"></h5>
+                            <p class="card-text" th:if="${restaurant.cuisineType != null}"
+                               th:text="${restaurant.cuisineType}"></p>
+                            <p class="card-text" th:if="${restaurant.location != null}"
+                               th:text="${restaurant.location}"></p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="row" th:unless="${!#lists.isEmpty(restaurantList)}">
-        <p>現在登録されているレストランはありません。</p>
+        <div class="row" th:unless="${!#lists.isEmpty(restaurantList)}">
+            <p>現在登録されているレストランはありません。</p>
+        </div>
     </div>
 </div>
 </body>

@@ -8,18 +8,10 @@
     <title>管理者 - レストラン予約システム - ホーム</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col">
-                <div class="text-center">
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <a class="btn btn-primary" th:href="@{/admin/restaurant-list}">レストラン管理</a>
-                    </div>
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <a class="btn btn-primary" th:href="@{/admin/reservation-list}">予約管理</a>
-                    </div>
-                </div>
-        </div>
+<div layout:fragment="content" class="content-center">
+    <div class="d-flex flex-column gap-5">
+        <a class="btn btn-primary btn-lg" th:href="@{/admin/restaurant-list}">レストラン管理</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/admin/reservation-list}">予約管理</a>
     </div>
 </div>
 </body>

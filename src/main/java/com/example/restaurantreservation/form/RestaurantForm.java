@@ -22,9 +22,7 @@ public class RestaurantForm {
     @NotBlank
     private String location;
 
-    @NotBlank
     private String imagePath;
-
 
     private String holidays;
 

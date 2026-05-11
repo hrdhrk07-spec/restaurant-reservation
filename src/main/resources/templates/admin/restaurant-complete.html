@@ -8,14 +8,14 @@
     <title>管理者 - レストラン予約システム - レストラン登録完了</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div layout:fragment="content"  class="content-center">
     <div class="row row-cols-1">
         <div class="col">
             <div>
-                <h3 class="text-center my-4">処理が完了しました。</h3>
+                <h3 class="text-center my-4 mb-5">処理が完了しました。</h3>
                 <div class="text-center">
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <a class="btn btn-primary" th:href="@{/admin/restaurant-list}">レストラン一覧</a>
+                    <div class="mt-5 mb-0">
+                        <a class="btn btn-primary btn-fixed" th:href="@{/admin/restaurant-list}">レストラン一覧</a>
                     </div>
                 </div>
             </div>

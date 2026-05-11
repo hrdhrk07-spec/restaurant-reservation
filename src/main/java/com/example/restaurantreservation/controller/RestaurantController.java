@@ -36,6 +36,7 @@ public class RestaurantController {
         model.addAttribute("cuisineType", cuisineType);
         model.addAttribute("name", name);
         model.addAttribute("restaurantList", restaurantService.getRestaurants(location, cuisineType, name));
+        model.addAttribute("showSearch", true);
         return "user/restaurant-list";
     }
 
@@ -50,6 +51,7 @@ public class RestaurantController {
     public String detail(@PathVariable("id") Long id, Model model) {
         Restaurant restaurant = restaurantService.getRestaurantById(id);
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("showSearch", true);
         return "user/restaurant-detail";
     }
 

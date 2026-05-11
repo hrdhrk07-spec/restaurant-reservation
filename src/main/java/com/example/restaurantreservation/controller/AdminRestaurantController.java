@@ -57,6 +57,7 @@ public class AdminRestaurantController {
 
         // バリデーションエラーの場合は再度一覧画面を表示
         if (result.hasErrors()) {
+            System.out.println(result);
             return "admin/restaurant-input";
         }
 

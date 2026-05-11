@@ -9,53 +9,74 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col"
-             th:with="hasSeats=${seatDetailList != null && !#lists.isEmpty(seatDetailList)},
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6"
+                 th:with="hasSeats=${seatDetailList != null && !#lists.isEmpty(seatDetailList)},
              noSeats=${seatDetailList != null && #lists.isEmpty(seatDetailList)}">
-            <div>
-                <form th:object="${reservationForm}" method="post"
-                      th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
-                    <h2 th:text="${restaurant.name}"></h2>
-                    <div class="form-floating mb-3">
-                        <p th:if="${hasSeats}"
-                           th:text="${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
-                        <input th:unless="${hasSeats}"
-                               th:classappend="${#fields.hasErrors('reservedAt')} ? 'is-invalid' : ''"
-                               th:field="*{reservedAt}" type="datetime-local" class="form-control" id="reservedAt"
-                               name="reservedAt" step="1800">
-                    </div>
-                    <div class="form-floating mb-3">
-                        <p th:if="${hasSeats}"
-                           th:text="${reservationForm.numberOfGuests}"></p>
-                        <input th:unless="${hasSeats}"
-                               th:classappend="${#fields.hasErrors('numberOfGuests')} ? 'is-invalid' : ''"
-                               th:field="*{numberOfGuests}" class="form-control" id="numberOfGuests" type="number"
-                               min="1" max="100">人
-                    </div>
-                    <div th:if="${noSeats}">
-                        <p>条件に合う空席がありません。</p>
-                    </div>
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <input th:unless="${hasSeats}" type="submit"
-                               class="btn btn-primary" value="空席確認">
-                    </div>
-                </form>
-            </div>
-            <div th:if="${hasSeats}">
-                <form method="post" th:action="@{/reservation-confirm}">
-                    <div th:each="seatDetail, iterStat : ${seatDetailList}">
-                        <input class="form-check-input" type="radio" th:name="seatDetailId"
-                               th:id="'seatDetailId_' + ${seatDetail.id}"
-                               th:value="${seatDetail.id}" th:checked="${iterStat.index == 0}">
-                        <label class="form-check-label" th:for="'seatDetailId_' + ${seatDetail.id}">
-                            [[${seatDetail.personPerSeat}]]人席
-                        </label>
-                    </div>
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <input type="submit" class="btn btn-primary" value="席決定">
-                    </div>
-                </form>
+                <div>
+                    <form th:object="${reservationForm}" method="post"
+                          th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
+                        <h2 class="mt-3 text-center">予約情報入力</h2>
+                        <table class="table mt-3">
+                            <tr>
+                                <th>レストラン名</th>
+                                <td th:text="${restaurant.name}"></td>
+                            </tr>
+                            <tr>
+                                <th>予約日時</th>
+                                <td>
+                                    <input th:unless="${hasSeats}"
+                                           th:classappend="${#fields.hasErrors('reservedAt')} ? 'is-invalid' : ''"
+                                           th:field="*{reservedAt}" type="datetime-local"
+                                           class="form-control form-control-short"
+                                           id="reservedAt"
+                                           name="reservedAt" step="1800">
+                                    <span th:if="${hasSeats}"
+                                       th:text="${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>予約人数</th>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <input th:unless="${hasSeats}"
+                                               th:classappend="${#fields.hasErrors('numberOfGuests')} ? 'is-invalid' : ''"
+                                               th:field="*{numberOfGuests}" class="form-control form-control-short"
+                                               id="numberOfGuests"
+                                               type="number"
+                                               min="1" max="100">
+                                        <span th:if="${hasSeats}"
+                                              th:text="${reservationForm.numberOfGuests}"></span>
+                                        <span class="ms-1">人</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="mb-3 text-center" th:if="${noSeats}">
+                            <p class="text-danger">条件に合う空席がありません。</p>
+                        </div>
+                        <div class="mt-4 mb-0 d-flex justify-content-center">
+                            <input th:unless="${hasSeats}" type="submit"
+                                   class="btn btn-primary btn-fixed" value="空席確認">
+                        </div>
+                    </form>
+                </div>
+                <div th:if="${hasSeats}">
+                    <form method="post" th:action="@{/reservation-confirm}">
+                        <div th:each="seatDetail, iterStat : ${seatDetailList}">
+                            <input class="form-check-input" type="radio" th:name="seatDetailId"
+                                   th:id="'seatDetailId_' + ${seatDetail.id}"
+                                   th:value="${seatDetail.id}" th:checked="${iterStat.index == 0}">
+                            <label class="form-check-label" th:for="'seatDetailId_' + ${seatDetail.id}">
+                                [[${seatDetail.personPerSeat}]]人席
+                            </label>
+                        </div>
+                        <div class="mt-4 mb-0 d-flex justify-content-center">
+                            <input type="submit" class="btn btn-primary btn-fixed" value="席決定">
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

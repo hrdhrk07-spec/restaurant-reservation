@@ -9,10 +9,10 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col">
-            <h3>レストラン新規登録</h3>
-            <div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h3 class="mt-3 mb-3 text-center">レストラン新規登録</h3>
                 <form th:object="${restaurantForm}" method="post" th:action="@{/admin/restaurant-input}">
                     <div class="row mb-3 alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
                         <ul class="mb-0">
@@ -37,8 +37,11 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="location" name="location" type="text"
-                               placeholder="大阪府大阪市北区1-1-1" th:field="*{location}"/>
-                        <label for="location">所在地</label>
+                               placeholder="大阪府大阪市北区1-1-1" th:field="*{location}"
+                               th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : ''"/>
+                        <label for="location">所在地 <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('location')}"
+                             th:errors="*{location}"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="imagePath" name="imagePath" type="text"
@@ -52,28 +55,38 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="receptionStartTime" name="receptionStartTime" type="time"
-                               placeholder="17:00" th:field="*{receptionStartTime}" step="1800"/>
-                        <label for="receptionStartTime">受付開始時刻</label>
+                               placeholder="17:00" th:field="*{receptionStartTime}" step="1800"
+                               th:classappend="${#fields.hasErrors('receptionStartTime')} ? 'is-invalid' : ''"/>
+                        <label for="receptionStartTime">受付開始時刻 <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('receptionStartTime')}"
+                             th:errors="*{receptionStartTime}"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="receptionEndTime" name="receptionEndTime" type="time"
-                               placeholder="23:00" th:field="*{receptionEndTime}" step="1800"/>
-                        <label for="receptionEndTime">受付終了時刻</label>
+                               placeholder="23:00" th:field="*{receptionEndTime}" step="1800"
+                               th:classappend="${#fields.hasErrors('receptionEndTime')} ? 'is-invalid' : ''"/>
+                        <label for="receptionEndTime">受付終了時刻 <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('receptionEndTime')}"
+                             th:errors="*{receptionEndTime}"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input th:classappend="${#fields.hasErrors('seatDetail.personPerSeat')} ? 'is-invalid' : ''"
-                               th:field="*{seatDetail.personPerSeat}" class="form-control" id="personPerSeat" type="number"
+                               th:field="*{seatDetail.personPerSeat}" class="form-control" id="personPerSeat"
+                               type="number"
                                min="1" max="100">
                         <label for="personPerSeat">一席あたりの人数 <span class="text-danger">*</span></label>
-                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.personPerSeat')}"
+                        <div class="invalid-feedback d-block"
+                             th:if="${#fields.hasErrors('seatDetail.personPerSeat')}"
                              th:errors="*{seatDetail.personPerSeat}"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input th:classappend="${#fields.hasErrors('seatDetail.numberOfSeats')} ? 'is-invalid' : ''"
-                               th:field="*{seatDetail.numberOfSeats}" class="form-control" id="numberOfSeats" type="number"
+                               th:field="*{seatDetail.numberOfSeats}" class="form-control" id="numberOfSeats"
+                               type="number"
                                min="1">
                         <label for="numberOfSeats">席セット数 <span class="text-danger">*</span></label>
-                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.numberOfSeats')}"
+                        <div class="invalid-feedback d-block"
+                             th:if="${#fields.hasErrors('seatDetail.numberOfSeats')}"
                              th:errors="*{seatDetail.numberOfSeats}"></div>
                     </div>
                     <div class="form-floating mb-3">
@@ -84,7 +97,7 @@
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.duration')}"
                              th:errors="*{seatDetail.duration}"></div>
                     </div>
-                    <div class="mt-4 mb-0">
+                    <div class="mt-4 mb-4">
                         <div class="d-grid"><input type="submit" class="btn btn-primary" value="新規登録"></div>
                     </div>
                 </form>

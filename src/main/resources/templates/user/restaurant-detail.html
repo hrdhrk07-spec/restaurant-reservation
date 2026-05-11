@@ -9,22 +9,28 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col">
-            <div>
-                <form method="get" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
-                    <h2 th:text="${restaurant.name}"></h2>
-                    <p th:text="${restaurant.cuisineType}"></p>
-                    <img th:if="${restaurant.imagePath != null}"
-                         th:src="@{'/images/' + ${restaurant.imagePath}}"
-                         class="card-img-top" alt="no image">
-                    <p th:text="${restaurant.location}"></p>
-                    <p th:if="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
-                    <p th:unless="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：' + ${restaurant.holidays}"></p>
-                    <div class="d-grid gap-2 mt-4 mb-0">
-                        <input type="submit" class="btn btn-primary" value="予約">
-                    </div>
-                </form>
+    <div class="container-fluid">
+        <div class="row row-cols-1">
+            <div class="col">
+                <div>
+                    <form method="get" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
+                        <h2 th:text="${restaurant.name}"></h2>
+                        <p th:text="${restaurant.cuisineType}"></p>
+                        <img th:if="${restaurant.imagePath != null}"
+                             th:src="@{'/images/' + ${restaurant.imagePath}}"
+                             class="restaurant-detail-img mb-3" alt="no image">
+                        <img th:unless="${restaurant.imagePath != null}"
+                             th:src="@{'/images/noimage.jpg'}"
+                             class="restaurant-detail-img mb-3" alt="no image">
+                        <p th:text="${restaurant.location}"></p>
+                        <p th:if="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
+                        <p th:unless="${#strings.isEmpty(restaurant.holidays)}"
+                           th:text="'休業日：' + ${restaurant.holidays}"></p>
+                        <div class="mt-4 mb-0">
+                            <input type="submit" class="btn btn-primary btn-fixed" value="予約">
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
