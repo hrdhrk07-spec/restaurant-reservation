@@ -5,6 +5,7 @@ import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.RestaurantForm;
 import com.example.restaurantreservation.form.SeatDetailForm;
+import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.RestaurantRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
     private final SeatDetailRepository seatDetailRepository;
+    private final ReservationRepository reservationRepository;
 
     /**
      * レストランの全件取得
@@ -168,6 +170,7 @@ public class RestaurantService {
      * @param id レストランID
      */
     public void deleteRestaurant(Long id) {
+        reservationRepository.deleteByRestaurantId(id);
         seatDetailRepository.deleteByRestaurantId(id);
         restaurantRepository.deleteById(id);
     }

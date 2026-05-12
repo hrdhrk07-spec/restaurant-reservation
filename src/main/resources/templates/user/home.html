@@ -14,19 +14,13 @@
             <div class="col" th:each="restaurant : ${restaurantList}">
                 <a th:href="@{/restaurant-detail/{id}(id=${restaurant.id})}">
                     <div class="card h-100">
-                        <img th:if="${restaurant.imagePath != null}"
-                             th:src="@{'/images/' + ${restaurant.imagePath}}"
-                             class="card-img-top" alt="no image">
-                        <img th:unless="${restaurant.imagePath != null}"
-                             th:src="@{'/images/noimage.jpg'}"
+                        <img th:src="${!#strings.isEmpty(restaurant.imagePath)} ? @{'/images/' + ${restaurant.imagePath}} : @{'/images/noimage.jpg'}"
+                             onerror="this.onerror=null;this.src='/images/noimage.jpg';"
                              class="card-img-top" alt="no image">
                         <div class="card-body">
-                            <h5 class="card-title" th:if="${restaurant.name != null}"
-                                th:text="${restaurant.name}"></h5>
-                            <p class="card-text" th:if="${restaurant.cuisineType != null}"
-                               th:text="${restaurant.cuisineType}"></p>
-                            <p class="card-text" th:if="${restaurant.location != null}"
-                               th:text="${restaurant.location}"></p>
+                            <h5 class="card-title" th:text="${restaurant.name}"></h5>
+                            <p class="card-text" th:text="${restaurant.cuisineType}"></p>
+                            <p class="card-text" th:text="${restaurant.location}"></p>
                         </div>
                     </div>
                 </a>

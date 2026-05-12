@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long> {
     List<SeatDetail> findByRestaurantId(Long restaurantId);
+    void deleteByRestaurantId(Long restaurantId);
 
     @Query("SELECT s "
             + "FROM SeatDetail s "
@@ -19,5 +20,4 @@ public interface SeatDetailRepository extends JpaRepository<SeatDetail, Long> {
             @Param("numberOfGuests") int numberOfGuests
     );
 
-    void deleteByRestaurantId(Long restaurantId);
 }

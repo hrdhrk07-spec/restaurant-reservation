@@ -16,11 +16,8 @@
                     <form method="get" th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
                         <h2 th:text="${restaurant.name}"></h2>
                         <p th:text="${restaurant.cuisineType}"></p>
-                        <img th:if="${restaurant.imagePath != null}"
-                             th:src="@{'/images/' + ${restaurant.imagePath}}"
-                             class="restaurant-detail-img mb-3" alt="no image">
-                        <img th:unless="${restaurant.imagePath != null}"
-                             th:src="@{'/images/noimage.jpg'}"
+                        <img th:src="${!#strings.isEmpty(restaurant.imagePath)} ? @{'/images/' + ${restaurant.imagePath}} : @{'/images/noimage.jpg'}"
+                             onerror="this.onerror=null;this.src='/images/noimage.jpg';"
                              class="restaurant-detail-img mb-3" alt="no image">
                         <p th:text="${restaurant.location}"></p>
                         <p th:if="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
