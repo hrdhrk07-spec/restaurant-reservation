@@ -1,7 +1,7 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.User;
-import com.example.restaurantreservation.entity.UserRole;
+import com.example.restaurantreservation.enums.UserRole;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.RegisterForm;
 import com.example.restaurantreservation.repository.UserRepository;

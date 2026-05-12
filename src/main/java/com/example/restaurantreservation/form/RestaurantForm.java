@@ -1,11 +1,13 @@
 package com.example.restaurantreservation.form;
 
+import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * レストラン登録のフォームクラス
@@ -24,7 +26,7 @@ public class RestaurantForm {
 
     private String imagePath;
 
-    private String holidays;
+    private List<HolidayDayOfWeek> holidayDayOfWeeks;
 
     @NotNull
     private LocalTime receptionStartTime;

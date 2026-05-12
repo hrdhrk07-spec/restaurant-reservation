@@ -1,5 +1,6 @@
 package com.example.restaurantreservation.entity;
 
+import com.example.restaurantreservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

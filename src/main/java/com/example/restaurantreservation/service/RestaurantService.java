@@ -1,10 +1,13 @@
 package com.example.restaurantreservation.service;
 
+import com.example.restaurantreservation.entity.Holiday;
 import com.example.restaurantreservation.entity.Restaurant;
 import com.example.restaurantreservation.entity.SeatDetail;
+import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.RestaurantForm;
 import com.example.restaurantreservation.form.SeatDetailForm;
+import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.RestaurantRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
@@ -19,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * レストラン関連のビジネスロジックを記載したサービスクラス
@@ -31,6 +35,7 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final SeatDetailRepository seatDetailRepository;
     private final ReservationRepository reservationRepository;
+    private final HolidayRepository holidayRepository;
 
     /**
      * レストランの全件取得
@@ -109,11 +114,17 @@ public class RestaurantService {
         restaurantForm.setCuisineType(restaurant.getCuisineType());
         restaurantForm.setLocation(restaurant.getLocation());
         restaurantForm.setImagePath(restaurant.getImagePath());
-        restaurantForm.setHolidays(restaurant.getHolidays());
         restaurantForm.setReceptionStartTime(restaurant.getReceptionStartTime());
         restaurantForm.setReceptionEndTime(restaurant.getReceptionEndTime());
 
-        // レストランIDから席詳細情報を取得
+        // 定休日を取得してレストラン登録フォームにセット
+        restaurantForm.setHolidayDayOfWeeks(
+                restaurant.getHolidays().stream()
+                        .map(Holiday::getHolidayDayOfWeek)
+                        .collect(Collectors.toList())
+        );
+
+        // レストランIDから席詳細を取得
         // 一旦リストの最初の席詳細だけを扱う
         SeatDetail seatDetail = seatDetailRepository.findByRestaurantId(id).getFirst();
 
@@ -143,13 +154,25 @@ public class RestaurantService {
         restaurant.setCuisineType(restaurantForm.getCuisineType());
         restaurant.setLocation(restaurantForm.getLocation());
         restaurant.setImagePath(restaurantForm.getImagePath());
-        restaurant.setHolidays(restaurantForm.getHolidays());
         restaurant.setReceptionStartTime(restaurantForm.getReceptionStartTime());
         restaurant.setReceptionEndTime(restaurantForm.getReceptionEndTime());
         restaurant.setId(id);
 
         // レストランを登録
         restaurant = restaurantRepository.save(restaurant);
+
+        // 既存の定休日を削除
+        holidayRepository.deleteByRestaurantId(restaurant.getId());
+
+        // フォームからHolidayエンティティに値を設定
+        if(restaurantForm.getHolidayDayOfWeeks() != null){
+            for(HolidayDayOfWeek h: restaurantForm.getHolidayDayOfWeeks()){
+                Holiday holiday = new Holiday();
+                holiday.setRestaurant(restaurant);
+                holiday.setHolidayDayOfWeek(h);
+                holidayRepository.save(holiday);
+            }
+        }
 
         // フォームからSeatDetailエンティティに値を設定
         SeatDetail seatDetail = new SeatDetail();
@@ -172,6 +195,7 @@ public class RestaurantService {
     public void deleteRestaurant(Long id) {
         reservationRepository.deleteByRestaurantId(id);
         seatDetailRepository.deleteByRestaurantId(id);
+        holidayRepository.deleteByRestaurantId(id);
         restaurantRepository.deleteById(id);
     }
 

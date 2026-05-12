@@ -1,4 +1,4 @@
-package com.example.restaurantreservation.entity;
+package com.example.restaurantreservation.enums;
 
 /**
  * 予約状況のステータス

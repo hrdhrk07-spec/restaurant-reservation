@@ -1,6 +1,6 @@
 package com.example.restaurantreservation.controller;
 
-import com.example.restaurantreservation.entity.ReservationStatus;
+import com.example.restaurantreservation.enums.ReservationStatus;
 import com.example.restaurantreservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

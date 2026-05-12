@@ -1,0 +1,11 @@
+package com.example.restaurantreservation.repository;
+
+import com.example.restaurantreservation.entity.Holiday;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface HolidayRepository extends JpaRepository<Holiday, Long> {
+    List<Holiday> findByRestaurantId(Long restaurantId);
+    void deleteByRestaurantId(Long restaurantId);
+}

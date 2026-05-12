@@ -44,7 +44,7 @@
                             <td th:text="${reservation.seatDetail.personPerSeat} + '人席'"></td>
                         </tr>
                     </table>
-                    <div th:each="s : ${T(com.example.restaurantreservation.entity.ReservationStatus).values()}">
+                    <div th:each="s : ${T(com.example.restaurantreservation.enums.ReservationStatus).values()}">
                         <input type="radio" th:id="${'status_' + s.name()}" name="status" th:value="${s.name()}"
                                th:checked="${s.name() == reservation.status.name()}"/>
                         <label th:for="${'status_' + s.name()}">[[${s.getLabel()}]]</label>

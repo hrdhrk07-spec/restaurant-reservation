@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * レストラン情報を管理するエンティティクラス
@@ -43,11 +44,6 @@ public class Restaurant extends BaseEntity {
     private String imagePath;
 
     /**
-     * 休業日
-     */
-    private String holidays;
-
-    /**
      * 受付開始時刻
      */
     private LocalTime receptionStartTime;
@@ -56,5 +52,11 @@ public class Restaurant extends BaseEntity {
      * 受付終了時刻
      */
     private LocalTime receptionEndTime;
+
+    /**
+     * 定休日
+     */
+    @OneToMany(mappedBy = "restaurant")
+    private List<Holiday> holidays;
 
 }

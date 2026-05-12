@@ -1,5 +1,6 @@
 package com.example.restaurantreservation.entity;
 
+import com.example.restaurantreservation.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;

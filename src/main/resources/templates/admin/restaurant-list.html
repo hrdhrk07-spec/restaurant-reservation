@@ -27,9 +27,9 @@
                     <th>cuisineType</th>
                     <th>location</th>
                     <th>imagePath</th>
-                    <th>holidays</th>
                     <th>receptionStartTime</th>
                     <th>receptionEndTime</th>
+                    <th>holidays</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -40,9 +40,9 @@
                     <th>cuisineType</th>
                     <th>location</th>
                     <th>imagePath</th>
-                    <th>holidays</th>
                     <th>receptionStartTime</th>
                     <th>receptionEndTime</th>
+                    <th>holidays</th>
                     <th></th>
                 </tr>
                 </tfoot>
@@ -53,9 +53,9 @@
                     <td th:text="${restaurant.cuisineType}"></td>
                     <td th:text="${restaurant.location}"></td>
                     <td th:text="${restaurant.imagePath}"></td>
-                    <td th:text="${restaurant.holidays}"></td>
                     <td th:text="${restaurant.receptionStartTime}"></td>
                     <td th:text="${restaurant.receptionEndTime}"></td>
+                    <td th:text="${#strings.listJoin(restaurant.holidays.![holidayDayOfWeek.label], '・')}"></td>
                     <td><a class="btn btn-primary"
                            th:href="@{/admin/restaurant-edit/{id}(id=${restaurant.id})}">編集</a></td>
                 </tr>

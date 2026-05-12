@@ -1,7 +1,7 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.Reservation;
-import com.example.restaurantreservation.entity.ReservationStatus;
+import com.example.restaurantreservation.enums.ReservationStatus;
 import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.entity.User;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;

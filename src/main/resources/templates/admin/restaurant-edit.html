@@ -54,11 +54,6 @@
                         <label for="imagePath">画像パス</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="holidays" name="holidays" type="text"
-                               placeholder="土日" th:field="*{holidays}"/>
-                        <label for="holidays">休業日</label>
-                    </div>
-                    <div class="form-floating mb-3">
                         <input class="form-control" id="receptionStartTime" name="receptionStartTime" type="time"
                                placeholder="17:00" step="1800"
                                th:value="${#temporals.format(restaurantForm.receptionStartTime, 'HH:mm')}"/>
@@ -73,6 +68,16 @@
                         <label for="receptionEndTime">受付終了時刻 <span class="text-danger">*</span></label>
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('receptionEndTime')}"
                              th:errors="*{receptionEndTime}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">定休日</label>
+                        <div class="d-flex gap-3">
+                            <div th:each="day : ${T(com.example.restaurantreservation.enums.HolidayDayOfWeek).values()}">
+                                <input type="checkbox" th:name="holidayDayOfWeeks" th:value="${day}"
+                                       th:checked="${restaurantForm.holidayDayOfWeeks != null and #lists.contains(restaurantForm.holidayDayOfWeeks, day)}">
+                                <label class="form-check-label" th:text="${day.label}"></label>
+                            </div>
+                        </div>
                     </div>
                     <input type="hidden" th:field="*{seatDetail.id}">
                     <div class="form-floating mb-3">

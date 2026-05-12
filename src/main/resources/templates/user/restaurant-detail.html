@@ -20,9 +20,9 @@
                              onerror="this.onerror=null;this.src='/images/noimage.jpg';"
                              class="restaurant-detail-img mb-3" alt="no image">
                         <p th:text="${restaurant.location}"></p>
-                        <p th:if="${#strings.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
-                        <p th:unless="${#strings.isEmpty(restaurant.holidays)}"
-                           th:text="'休業日：' + ${restaurant.holidays}"></p>
+                        <p th:if="${#lists.isEmpty(restaurant.holidays)}" th:text="'休業日：無し'"></p>
+                        <p th:unless="${#lists.isEmpty(restaurant.holidays)}"
+                           th:text="'休業日：' + ${#strings.listJoin(restaurant.holidays.![holidayDayOfWeek.label], '・')}"></p>
                         <div class="mt-4 mb-0">
                             <input type="submit" class="btn btn-primary btn-fixed" value="予約">
                         </div>
