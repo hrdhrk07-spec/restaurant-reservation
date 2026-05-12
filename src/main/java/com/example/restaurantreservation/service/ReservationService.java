@@ -1,11 +1,14 @@
 package com.example.restaurantreservation.service;
 
+import com.example.restaurantreservation.entity.Holiday;
 import com.example.restaurantreservation.entity.Reservation;
+import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import com.example.restaurantreservation.enums.ReservationStatus;
 import com.example.restaurantreservation.entity.SeatDetail;
 import com.example.restaurantreservation.entity.User;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.ReservationForm;
+import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final SeatDetailRepository seatDetailRepository;
+    private final HolidayRepository holidayRepository;
 
     /**
      * IDに一致する予約を1件取得
@@ -57,6 +61,24 @@ public class ReservationService {
     }
 
     /**
+     * 定休日チェック
+     *
+     * @param restaurantId レストランID
+     * @param reservedAt   予約日時
+     * @return 定休日ならTrue、そうでなければFalse
+     */
+    public boolean isHoliday(Long restaurantId, LocalDateTime reservedAt) {
+        // 定休日の取得
+        List<HolidayDayOfWeek> holidays = holidayRepository.findByRestaurantId(restaurantId).stream()
+                .map(Holiday::getHolidayDayOfWeek)
+                .toList();
+
+        // 予約日の曜日が定休日に含まれていればTrueを返す
+        return holidays.contains(HolidayDayOfWeek.of(reservedAt.getDayOfWeek()));
+
+    }
+
+    /**
      * 予約時の空席確認
      *
      * @param restaurantId   レストランID
@@ -83,6 +105,16 @@ public class ReservationService {
                         ) >= 1)
                 .collect(Collectors.toList());
 
+    }
+
+    /**
+     * 過去日時チェック
+     *
+     * @param reservedAt 予約日時
+     * @return 過去日時ならTrue、そうでなければFalse
+     */
+    public boolean isPastDate(LocalDateTime reservedAt) {
+        return reservedAt.isBefore(LocalDateTime.now());
     }
 
     /**

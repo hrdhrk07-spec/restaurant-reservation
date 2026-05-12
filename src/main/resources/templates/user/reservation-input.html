@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <title>レストラン予約システム - 予約</title>
 </head>
 <body>
@@ -12,8 +15,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6"
-                 th:with="hasSeats=${seatDetailList != null && !#lists.isEmpty(seatDetailList)},
-             noSeats=${seatDetailList != null && #lists.isEmpty(seatDetailList)}">
+                 th:with="hasSeats=${seatDetailList != null and !#lists.isEmpty(seatDetailList)},
+             noSeats=${seatDetailList != null and #lists.isEmpty(seatDetailList)}">
                 <div>
                     <form th:object="${reservationForm}" method="post"
                           th:action="@{/reservation-input/{id}(id=${restaurant.id})}">
@@ -28,10 +31,10 @@
                                 <td>
                                     <input th:unless="${hasSeats}"
                                            th:classappend="${#fields.hasErrors('reservedAt')} ? 'is-invalid' : ''"
-                                           th:field="*{reservedAt}" type="datetime-local"
+                                           th:field="*{reservedAt}" type="text"
                                            class="form-control form-control-short"
                                            id="reservedAt"
-                                           name="reservedAt" step="1800">
+                                           name="reservedAt">
                                     <span th:if="${hasSeats}"
                                        th:text="${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></span>
                                 </td>
@@ -55,6 +58,9 @@
                         </table>
                         <div class="mb-3 text-center" th:if="${noSeats}">
                             <p class="text-danger">条件に合う空席がありません。</p>
+                        </div>
+                        <div class="mb-3 text-center" th:if="${!#strings.isEmpty(holidayError)}">
+                            <p class="text-danger" th:text="${holidayError}"></p>
                         </div>
                         <div class="mt-4 mb-0 d-flex justify-content-center">
                             <input th:unless="${hasSeats}" type="submit"
@@ -80,6 +86,22 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        const holidays = [[${restaurant.holidays.![holidayDayOfWeek.value]}]];
+
+        flatpickr("#reservedAt", {
+            locale: "ja",
+            minDate: "today",
+            enableTime: true,
+            dateFormat: "Y/m/d H:i",
+            minuteIncrement: 30,
+            disable: [
+                function(date) {
+                    return holidays.includes(date.getDay());
+                }
+            ]
+        });
+    </script>
 </div>
 </body>
 </html>

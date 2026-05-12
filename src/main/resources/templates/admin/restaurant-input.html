@@ -98,7 +98,7 @@
                         <input th:classappend="${#fields.hasErrors('seatDetail.duration')} ? 'is-invalid' : ''"
                                th:field="*{seatDetail.duration}" class="form-control" id="duration" type="number"
                                min="1">
-                        <label for="duration">所要時間 <span class="text-danger">*</span></label>
+                        <label for="duration">所要時間（分） <span class="text-danger">*</span></label>
                         <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('seatDetail.duration')}"
                              th:errors="*{seatDetail.duration}"></div>
                     </div>

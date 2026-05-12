@@ -10,7 +10,7 @@
 <body>
 <div layout:fragment="content">
     <div class="container-fluid">
-        <div class="row row-cols-1" th:if="${!#lists.isEmpty(restaurantList)}">
+        <div class="row row-cols-1" th:if="${restaurantList != null and !#lists.isEmpty(restaurantList)}">
             <div class="col mb-2" th:each="restaurant : ${restaurantList}">
                 <a th:href="@{/restaurant-detail/{id}(id=${restaurant.id})}">
                     <div class="card flex-row h-100">
@@ -26,7 +26,7 @@
                 </a>
             </div>
         </div>
-        <div class="row" th:unless="${!#lists.isEmpty(restaurantList)}">
+        <div class="row" th:unless="${restaurantList != null and !#lists.isEmpty(restaurantList)}">
             <p>該当のレストランはありません。</p>
         </div>
     </div>

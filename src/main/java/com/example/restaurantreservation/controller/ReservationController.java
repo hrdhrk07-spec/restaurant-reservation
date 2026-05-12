@@ -70,6 +70,12 @@ public class ReservationController {
             return "user/reservation-input";
         }
 
+        // 定休日の場合は再度入力画面を表示
+        if (reservationService.isHoliday(id, reservationForm.getReservedAt())) {
+            model.addAttribute("holidayError", "選択した日は定休日です。");
+            return "user/reservation-input";
+        }
+
         // 予約可能な席詳細を取得して画面に渡すようセット
         model.addAttribute("seatDetailList",
                 reservationService.getAvailableSeats(id, reservationForm.getReservedAt(), reservationForm.getNumberOfGuests()));
@@ -122,6 +128,11 @@ public class ReservationController {
             @RequestParam Long seatDetailId,
             @ModelAttribute ReservationForm reservationForm,
             Model model) {
+
+        // 過去日時チェック
+        if(reservationService.isPastDate(reservationForm.getReservedAt())){
+            throw new RuntimeException("過去日時への予約");
+        }
 
         // ログインユーザからメールアドレスを取得
         String email = userDetails.getUsername();

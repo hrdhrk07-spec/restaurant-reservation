@@ -1,5 +1,8 @@
 package com.example.restaurantreservation.enums;
 
+import java.time.DayOfWeek;
+import java.util.Arrays;
+
 /**
  * 定休日の曜日
  */
@@ -28,4 +31,17 @@ public enum HolidayDayOfWeek {
     public int getValue() {
         return value;
     }
+
+    /**
+     * DayOfWeek → HolidayDayOfWeek変換
+     *
+     * @return HolidayDayOfWeek型の曜日
+     */
+    public static HolidayDayOfWeek of(DayOfWeek dayOfWeek) {
+        return Arrays.stream(values())
+                .filter(h -> h.value == dayOfWeek.getValue() % 7)
+                .findFirst()
+                .orElseThrow();
+    }
+
 }
