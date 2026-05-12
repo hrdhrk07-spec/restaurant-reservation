@@ -52,7 +52,7 @@ public class Reservation extends BaseEntity {
     private int numberOfGuests;
 
     /**
-     * 予約ステータス（例：PENDING / CONFIRMED / CANCELLED）
+     * 予約ステータス（例：CONFIRMED / CANCELLED）
      */
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;

@@ -17,12 +17,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             + "WHERE r.seat_detail_id = :seatDetailId "
             + "AND r.reserved_at < :endTime "
             + "AND r.reserved_at + (s.duration * INTERVAL '1 minute') > :reservedAt "
-            + "AND r.status IN :statuses ",
+            + "AND r.status = :status",
             nativeQuery = true)
     int countOverlapping(
             @Param("seatDetailId") Long seatDetailId,
             @Param("reservedAt") LocalDateTime reservedAt,
             @Param("endTime") LocalDateTime endTime,
-            @Param("statuses") List<String> statuses
+            @Param("status") String status
     );
 }

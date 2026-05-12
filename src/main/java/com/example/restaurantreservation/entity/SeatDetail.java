@@ -3,8 +3,6 @@ package com.example.restaurantreservation.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * 席詳細情報を管理するエンティティクラス
  */

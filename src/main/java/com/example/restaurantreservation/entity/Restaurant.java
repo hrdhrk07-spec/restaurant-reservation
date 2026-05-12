@@ -3,7 +3,6 @@ package com.example.restaurantreservation.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**

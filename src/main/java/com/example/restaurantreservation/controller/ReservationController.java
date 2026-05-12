@@ -108,7 +108,7 @@ public class ReservationController {
     }
 
     /**
-     * 予約の実行
+     * 予約の登録
      *
      * @param userDetails     ユーザ情報
      * @param seatDetailId    席詳細ID

@@ -70,7 +70,7 @@ public class ReservationService {
         List<SeatDetail> seatDetailList = seatDetailRepository.findAvailableSeatsByRestaurantAndGuests(restaurantId, numberOfGuests);
 
         // 予約の重複確認用に予約のステータスを設定
-        List<String> statuses = List.of(ReservationStatus.PENDING.name(), ReservationStatus.CONFIRMED.name());
+        String status = ReservationStatus.CONFIRMED.name();
 
         // 席の空き数が1以上ある席詳細を戻り値に設定
         return seatDetailList.stream()
@@ -79,7 +79,7 @@ public class ReservationService {
                                 seatDetail.getId(),
                                 reservedAt,
                                 reservedAt.plusMinutes(seatDetail.getDuration()),
-                                statuses
+                                status
                         ) >= 1)
                 .collect(Collectors.toList());
 
@@ -101,7 +101,21 @@ public class ReservationService {
         reservation.setRestaurant(seatDetail.getRestaurant());
         reservation.setReservedAt(reservationForm.getReservedAt());
         reservation.setNumberOfGuests(reservationForm.getNumberOfGuests());
-        reservation.setStatus(ReservationStatus.PENDING);
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+
+        // 重複している予約の数を取得
+        int overlapping = reservationRepository.countOverlapping(
+                seatDetail.getId(),
+                reservationForm.getReservedAt(),
+                reservationForm.getReservedAt().plusMinutes(seatDetail.getDuration()),
+                ReservationStatus.CONFIRMED.name()
+        );
+
+        // 席が空いていない場合は例外処理
+        if (seatDetail.getNumberOfSeats() - overlapping < 1) {
+            throw new RuntimeException("予約時重複チェックの失敗 レストランID:" + seatDetail.getRestaurant().getId()
+                    + " ユーザID:" + user.getId());
+        }
 
         // 登録
         return reservationRepository.save(reservation);
