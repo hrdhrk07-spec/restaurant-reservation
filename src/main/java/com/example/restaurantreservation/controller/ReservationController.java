@@ -1,6 +1,7 @@
 package com.example.restaurantreservation.controller;
 
 import com.example.restaurantreservation.entity.*;
+import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.exception.UnauthorizedAccessException;
 import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.service.*;
@@ -88,9 +89,9 @@ public class ReservationController {
     @PostMapping("/reservation-confirm")
     public String confirmPost(@RequestParam(required = false) Long seatDetailId, @ModelAttribute ReservationForm reservationForm, Model model) {
 
-        //　席詳細IDが空の場合はレストラン一覧画面にリダイレクト
+        //　席詳細IDが空の場合はエラー
         if (seatDetailId == null) {
-            return "redirect:/restaurant-list";
+            throw new ResourceNotFoundException("席詳細ID取得の失敗");
         }
 
         // 席詳細IDからレストラン情報を取得

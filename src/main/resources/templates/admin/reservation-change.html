@@ -9,27 +9,48 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col">
-            <h3>予約ステータス変更</h3>
-            <div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <h3 class="mt-3 text-center">予約ステータス変更</h3>
+            <div class="col-md-6">
                 <form method="post" th:action="@{/admin/reservation-change/{id}(id=${reservation.id})}">
-                    <div>
-                        <p th:text="'レストラン名：' + ${reservation.restaurant.name}"></p>
-                        <p th:text="'名前：' + ${reservation.user.name}"></p>
-                        <p th:text="'電話番号：' + ${reservation.user.phoneNumber}"></p>
-                        <p th:text="'メールアドレス：' + ${reservation.user.email}"></p>
-                        <p th:text="'予約日時：' + ${#temporals.format(reservation.reservedAt, 'yyyy/MM/dd HH:mm')}"></p>
-                        <p th:text="'予約人数：' + ${reservation.numberOfGuests} + '人'"></p>
-                        <p th:text="${reservation.seatDetail.personPerSeat} + '人席'"></p>
-                    </div>
+                    <table class="table mt-3">
+                        <tr>
+                            <th>レストラン名</th>
+                            <td th:text="${reservation.restaurant.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>名前</th>
+                            <td th:text="${reservation.user.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>電話番号</th>
+                            <td th:text="${reservation.user.phoneNumber}"></td>
+                        </tr>
+                        <tr>
+                            <th>メールアドレス</th>
+                            <td th:text="${reservation.user.email}"></td>
+                        </tr>
+                        <tr>
+                            <th>予約日時</th>
+                            <td th:text="${#temporals.format(reservation.reservedAt, 'yyyy/MM/dd HH:mm')}"></td>
+                        </tr>
+                        <tr>
+                            <th>予約人数</th>
+                            <td th:text="${reservation.numberOfGuests} + '人'"></td>
+                        </tr>
+                        <tr>
+                            <th>予約席</th>
+                            <td th:text="${reservation.seatDetail.personPerSeat} + '人席'"></td>
+                        </tr>
+                    </table>
                     <div th:each="s : ${T(com.example.restaurantreservation.entity.ReservationStatus).values()}">
                         <input type="radio" th:id="${'status_' + s.name()}" name="status" th:value="${s.name()}"
                                th:checked="${s.name() == reservation.status.name()}"/>
                         <label th:for="${'status_' + s.name()}">[[${s.getLabel()}]]</label>
                     </div>
-                    <div class="mt-4 mb-0">
-                        <div class="d-grid"><input type="submit" class="btn btn-primary" value="更新"></div>
+                    <div class="mt-4 mb-0 d-flex justify-content-center">
+                        <div class="d-grid"><input type="submit" class="btn btn-primary btn-fixed" value="更新"></div>
                     </div>
                 </form>
             </div>

@@ -55,9 +55,8 @@ public class AdminRestaurantController {
     @PostMapping("/restaurant-input")
     public String inputPost(@Valid @ModelAttribute RestaurantForm restaurantForm, BindingResult result, Model model) {
 
-        // バリデーションエラーの場合は再度一覧画面を表示
+        // バリデーションエラーの場合は再度登録画面を表示
         if (result.hasErrors()) {
-            System.out.println(result);
             return "admin/restaurant-input";
         }
 
@@ -103,6 +102,7 @@ public class AdminRestaurantController {
 
         // バリデーションエラーの場合は再度一覧画面を表示
         if (result.hasErrors()) {
+            model.addAttribute("restaurantId", id);
             return "admin/restaurant-edit";
         }
 
