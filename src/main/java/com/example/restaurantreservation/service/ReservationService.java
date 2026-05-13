@@ -1,21 +1,21 @@
 package com.example.restaurantreservation.service;
 
-import com.example.restaurantreservation.entity.Holiday;
-import com.example.restaurantreservation.entity.Reservation;
+import com.example.restaurantreservation.entity.*;
 import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import com.example.restaurantreservation.enums.ReservationStatus;
-import com.example.restaurantreservation.entity.SeatDetail;
-import com.example.restaurantreservation.entity.User;
 import com.example.restaurantreservation.exception.ResourceNotFoundException;
 import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +79,35 @@ public class ReservationService {
     }
 
     /**
+     * 受付時間内チェック
+     *
+     * @param reservedAt         予約日時
+     * @param receptionStartTime 受付開始時刻
+     * @param receptionEndTime   受付終了時刻
+     * @return 予約時刻が受付時間内であればTrue、そうでなければFalse
+     */
+    public boolean canReception(LocalDateTime reservedAt, LocalTime receptionStartTime, LocalTime receptionEndTime) {
+
+        // 受付開始時刻と受付終了時刻のどちらか一方でもnullであれば予約可能とする
+        if (receptionStartTime == null || receptionEndTime == null) {
+            return true;
+        }
+
+        // LocalDateTime -> LocalTime変換
+        LocalTime reservedAtTime = reservedAt.toLocalTime();
+
+        if (receptionStartTime.isBefore(receptionEndTime)) {
+            // 受付時間が日をまたがない場合は、「予約日時が受付開始時刻と受付終了時刻の間」であればOK
+            // isBeforeとisAfterは境界値を含まないため、否定を利用して境界値を含む
+            return !reservedAtTime.isBefore(receptionStartTime) && !reservedAtTime.isAfter(receptionEndTime);
+        } else {
+            // 受付時間が日をまたぐ場合は、「予約日時が受付開始時刻より後」または「予約日時が受付終了時刻より前」であればOK
+            return !reservedAtTime.isBefore(receptionStartTime) || !reservedAtTime.isAfter(receptionEndTime);
+        }
+
+    }
+
+    /**
      * 予約時の空席確認
      *
      * @param restaurantId   レストランID
@@ -126,28 +155,47 @@ public class ReservationService {
      */
     public Reservation saveReservation(User user, SeatDetail seatDetail, ReservationForm reservationForm) {
 
-        // 予約情報をセット
-        Reservation reservation = new Reservation();
-        reservation.setUser(user);
-        reservation.setSeatDetail(seatDetail);
-        reservation.setRestaurant(seatDetail.getRestaurant());
-        reservation.setReservedAt(reservationForm.getReservedAt());
-        reservation.setNumberOfGuests(reservationForm.getNumberOfGuests());
-        reservation.setStatus(ReservationStatus.CONFIRMED);
+        // 繰り返し使う情報をセット
+        LocalDateTime reservedAt = reservationForm.getReservedAt();
+        Restaurant restaurant = seatDetail.getRestaurant();
+
+        // 過去日時チェック
+        if (isPastDate(reservedAt)) {
+            throw new RuntimeException("過去日時への予約");
+        }
+
+        // 定休日チェック
+        if (isHoliday(restaurant.getId(), reservedAt)) {
+            throw new RuntimeException("定休日への予約");
+        }
+
+        // 受付時間チェック
+        if (!canReception(reservedAt, restaurant.getReceptionStartTime(), restaurant.getReceptionEndTime())) {
+            throw new RuntimeException("受付時間外への予約");
+        }
 
         // 重複している予約の数を取得
         int overlapping = reservationRepository.countOverlapping(
                 seatDetail.getId(),
-                reservationForm.getReservedAt(),
-                reservationForm.getReservedAt().plusMinutes(seatDetail.getDuration()),
+                reservedAt,
+                reservedAt.plusMinutes(seatDetail.getDuration()),
                 ReservationStatus.CONFIRMED.name()
         );
 
         // 席が空いていない場合は例外処理
         if (seatDetail.getNumberOfSeats() - overlapping < 1) {
-            throw new RuntimeException("予約時重複チェックの失敗 レストランID:" + seatDetail.getRestaurant().getId()
+            throw new RuntimeException("予約時重複チェックの失敗 レストランID:" + restaurant.getId()
                     + " ユーザID:" + user.getId());
         }
+
+        // 予約情報をセット
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setSeatDetail(seatDetail);
+        reservation.setRestaurant(restaurant);
+        reservation.setReservedAt(reservedAt);
+        reservation.setNumberOfGuests(reservationForm.getNumberOfGuests());
+        reservation.setStatus(ReservationStatus.CONFIRMED);
 
         // 登録
         return reservationRepository.save(reservation);
