@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +36,6 @@ public class RestaurantForm {
     private LocalTime receptionEndTime;
 
     @Valid
-    private SeatDetailForm seatDetail = new SeatDetailForm();
+    private List<SeatDetailForm> seatDetails = new ArrayList<>(List.of(new SeatDetailForm()));
 
 }

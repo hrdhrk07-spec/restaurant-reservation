@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -125,18 +127,28 @@ public class RestaurantService {
         );
 
         // レストランIDから席詳細を取得
-        // 一旦リストの最初の席詳細だけを扱う
-        SeatDetail seatDetail = seatDetailRepository.findByRestaurantId(id).getFirst();
+        List<SeatDetail> seatDetails = seatDetailRepository.findByRestaurantId(id);
 
-        // 席詳細フォームに値をセット
-        SeatDetailForm seatDetailForm = new SeatDetailForm();
-        seatDetailForm.setId(seatDetail.getId());
-        seatDetailForm.setPersonPerSeat(seatDetail.getPersonPerSeat());
-        seatDetailForm.setNumberOfSeats(seatDetail.getNumberOfSeats());
-        seatDetailForm.setDuration(seatDetail.getDuration());
+        // 席詳細フォームのリストを作成
+        List<SeatDetailForm> seatDetailForms = new ArrayList<>();
+
+        // 席詳細の数だけループ
+        for (SeatDetail seatDetail : seatDetails) {
+
+            // 席詳細フォームに値をセット
+            SeatDetailForm seatDetailForm = new SeatDetailForm();
+            seatDetailForm.setId(seatDetail.getId());
+            seatDetailForm.setPersonPerSeat(seatDetail.getPersonPerSeat());
+            seatDetailForm.setNumberOfSeats(seatDetail.getNumberOfSeats());
+            seatDetailForm.setDuration(seatDetail.getDuration());
+
+            // リストにセット
+            seatDetailForms.add(seatDetailForm);
+
+        }
 
         // レストラン登録フォームに席詳細フォームをセット
-        restaurantForm.setSeatDetail(seatDetailForm);
+        restaurantForm.setSeatDetails(seatDetailForms);
 
     }
 
@@ -165,8 +177,8 @@ public class RestaurantService {
         holidayRepository.deleteByRestaurantId(restaurant.getId());
 
         // フォームからHolidayエンティティに値を設定
-        if(restaurantForm.getHolidayDayOfWeeks() != null){
-            for(HolidayDayOfWeek h: restaurantForm.getHolidayDayOfWeeks()){
+        if (restaurantForm.getHolidayDayOfWeeks() != null) {
+            for (HolidayDayOfWeek h : restaurantForm.getHolidayDayOfWeeks()) {
                 Holiday holiday = new Holiday();
                 holiday.setRestaurant(restaurant);
                 holiday.setHolidayDayOfWeek(h);
@@ -174,16 +186,53 @@ public class RestaurantService {
             }
         }
 
-        // フォームからSeatDetailエンティティに値を設定
-        SeatDetail seatDetail = new SeatDetail();
-        seatDetail.setRestaurant(restaurant);
-        seatDetail.setPersonPerSeat(restaurantForm.getSeatDetail().getPersonPerSeat());
-        seatDetail.setNumberOfSeats(restaurantForm.getSeatDetail().getNumberOfSeats());
-        seatDetail.setDuration(restaurantForm.getSeatDetail().getDuration());
-        seatDetail.setId(restaurantForm.getSeatDetail().getId());
+        // 席詳細フォームを取得
+        List<SeatDetailForm> seatDetailForms = restaurantForm.getSeatDetails();
 
-        // 登録
-        seatDetailRepository.save(seatDetail);
+        // 更新時は席詳細の削除チェックを実施
+        if (id != null) {
+
+            // 既存の席詳細IDリストを取得
+            List<Long> seatDetailIds = seatDetailRepository.findByRestaurantId(restaurant.getId())
+                    .stream()
+                    .map(SeatDetail::getId)
+                    .collect(Collectors.toList());
+
+            // 席詳細フォームのIDリストを取得
+            List<Long> formSeatDetailIds = seatDetailForms
+                    .stream()
+                    .map(SeatDetailForm::getId)
+                    .collect(Collectors.toList());
+
+            //  席詳細フォームのIDリストからnullを除去（追加された席詳細の分を取り除く）
+            formSeatDetailIds.removeAll(Collections.singleton(null));
+
+            // 削除対象の特定
+            seatDetailIds.removeAll(formSeatDetailIds);
+
+            // 削除対象ごとに予約の存在チェック
+            for (Long seatDetailId : seatDetailIds) {
+                // 予約が存在しない場合は削除
+                if (reservationRepository.countBySeatDetailId(seatDetailId) == 0) {
+                    seatDetailRepository.deleteById(seatDetailId);
+                }
+            }
+        }
+
+        // 席詳細の数だけループ
+        for (SeatDetailForm seatDetailForm : seatDetailForms) {
+
+            // フォームからSeatDetailエンティティに値を設定
+            SeatDetail seatDetail = new SeatDetail();
+            seatDetail.setRestaurant(restaurant);
+            seatDetail.setPersonPerSeat(seatDetailForm.getPersonPerSeat());
+            seatDetail.setNumberOfSeats(seatDetailForm.getNumberOfSeats());
+            seatDetail.setDuration(seatDetailForm.getDuration());
+            seatDetail.setId(seatDetailForm.getId());
+
+            // 登録
+            seatDetailRepository.save(seatDetail);
+        }
 
     }
 

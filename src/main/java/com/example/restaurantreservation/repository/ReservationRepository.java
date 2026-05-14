@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByUserIdOrderByReservedAtDesc(Long userId);
+    int countBySeatDetailId(Long seatDetailId);
     void deleteByRestaurantId(Long restaurantId);
 
     @Query(value = "SELECT COUNT(*) "
