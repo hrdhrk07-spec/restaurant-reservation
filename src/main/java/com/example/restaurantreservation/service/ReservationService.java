@@ -86,7 +86,7 @@ public class ReservationService {
      * @param receptionEndTime   受付終了時刻
      * @return 予約時刻が受付時間内であればTrue、そうでなければFalse
      */
-    public boolean canReception(LocalDateTime reservedAt, LocalTime receptionStartTime, LocalTime receptionEndTime) {
+    public static boolean canReception(LocalDateTime reservedAt, LocalTime receptionStartTime, LocalTime receptionEndTime) {
 
         // 受付開始時刻と受付終了時刻のどちらか一方でもnullであれば予約可能とする
         if (receptionStartTime == null || receptionEndTime == null) {
