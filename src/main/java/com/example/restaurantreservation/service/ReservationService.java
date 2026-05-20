@@ -9,11 +9,10 @@ import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
 import com.example.restaurantreservation.repository.SeatDetailRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,6 +29,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final SeatDetailRepository seatDetailRepository;
     private final HolidayRepository holidayRepository;
+    private final Clock clock;
 
     /**
      * IDに一致する予約を1件取得
@@ -143,7 +143,7 @@ public class ReservationService {
      * @return 過去日時ならTrue、そうでなければFalse
      */
     public boolean isPastDate(LocalDateTime reservedAt) {
-        return reservedAt.isBefore(LocalDateTime.now());
+        return reservedAt.isBefore(LocalDateTime.now(clock));
     }
 
     /**

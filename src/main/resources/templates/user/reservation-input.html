@@ -35,6 +35,8 @@
                                            class="form-control form-control-short"
                                            id="reservedAt"
                                            name="reservedAt">
+                                    <span th:unless="${hasSeats}"
+                                          th:text="${'予約受付時間 ' + restaurant.receptionStartTime + '～' + restaurant.receptionEndTime}"></span>
                                     <span th:if="${hasSeats}"
                                        th:text="${#temporals.format(reservationForm.reservedAt, 'yyyy/MM/dd HH:mm')}"></span>
                                 </td>
