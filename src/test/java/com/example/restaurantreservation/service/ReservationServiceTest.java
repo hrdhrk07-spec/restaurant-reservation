@@ -1,7 +1,6 @@
 package com.example.restaurantreservation.service;
 
 import com.example.restaurantreservation.entity.Holiday;
-import com.example.restaurantreservation.entity.Restaurant;
 import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
