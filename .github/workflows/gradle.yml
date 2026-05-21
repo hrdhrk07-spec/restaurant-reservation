@@ -13,12 +13,32 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  DB_URL: jdbc:postgresql://localhost:5432/restaurant_reservation
+  DB_USERNAME: test
+  DB_PASSWORD: test
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: restaurant_reservation
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v4
