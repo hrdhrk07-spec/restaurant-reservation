@@ -1,0 +1,44 @@
+<testsuites id="" name="" tests="18" failures="0" skipped="0" errors="0" time="10.933428">
+<testsuite name="specs\auth.spec.ts" timestamp="2026-05-25T08:54:46.205Z" hostname="chromium" tests="6" failures="0" skipped="0" time="7.736" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="1.184">
+</testcase>
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="1.405">
+</testcase>
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="1.469">
+</testcase>
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="1.264">
+</testcase>
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="1.248">
+</testcase>
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="1.166">
+</testcase>
+</testsuite>
+<testsuite name="specs\auth.spec.ts" timestamp="2026-05-25T08:54:46.205Z" hostname="firefox" tests="6" failures="0" skipped="0" time="31.608" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="7.51">
+</testcase>
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="8.427">
+</testcase>
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="5.488">
+</testcase>
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="2.448">
+</testcase>
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="3.649">
+</testcase>
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="4.086">
+</testcase>
+</testsuite>
+<testsuite name="specs\auth.spec.ts" timestamp="2026-05-25T08:54:46.205Z" hostname="webkit" tests="6" failures="0" skipped="0" time="7.8" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="1.771">
+</testcase>
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="1.035">
+</testcase>
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="1.524">
+</testcase>
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="1.331">
+</testcase>
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="1.13">
+</testcase>
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="1.009">
+</testcase>
+</testsuite>
+</testsuites>
