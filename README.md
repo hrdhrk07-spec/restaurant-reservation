@@ -88,19 +88,24 @@ PostgreSQL
 | `isPastDate`（過去日時チェック） | 5件 | 同値分割・境界値分析 |
 | `isHoliday`（定休日チェック） | 3件 | 同値分割 |
 | `saveReservation`（予約登録） | 5件 | モックを用いた単体テスト |
+| ユーザー登録・認証（E2Eテスト） | 6件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit） |
+
 
 ### 使用技術
 - **JUnit 5**：`@ParameterizedTest` / `@MethodSource` によるパラメータ化テスト
 - **Mockito**：`@Mock` / `@Spy` / `@InjectMocks` によるモック化
+- **Playwright**：Chromium・Firefox・WebKitの3ブラウザでのE2Eテスト自動化
 - **GitHub Actions**：main ブランチへの push・PR をトリガーにテストを自動実行し、テストレポートを出力
 
 ---
 
 ## 工夫した点
 
-### テスト設計を意識した実装
+### テスト設計からCI導入までの一貫した取り組み
 テストコードを書く前にテスト設計書を作成し、同値分割・境界値分析・デシジョンテーブルを用いてテストケースを洗い出しました。
-また、テスタビリティを意識した設計として、日時取得に Clock を導入し、テスト時に任意の日時を注入できるようにしています。
+テスタビリティを意識した設計として、日時取得に Clock を導入し、テスト時に任意の日時を注入できるようにしています。
+E2Eテストには Playwright を採用し、単体テストとE2Eテストでテストレイヤーの役割分担を意識しながら、ユーザー登録・認証フローを3ブラウザで自動検証しています。
+また、GitHub Actions による CI を導入し、main ブランチへの push・PR をトリガーに単体テスト・E2Eテストが自動実行される環境を整えています。
 
 ### レイヤーの役割分担を意識した設計
 Controller・Service・Repository それぞれの役割に沿った実装を意識しました。  

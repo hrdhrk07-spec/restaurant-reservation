@@ -20,10 +20,15 @@
                                     アカウント作成</h3></div>
                                 <div class="card-body">
                                     <form method="post" th:action="@{/register}" th:object="${registerForm}">
-                                        <div class="row mb-3 alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                                        <div class="form-floating mb-3 alert alert-danger"
+                                             th:if="${#fields.hasGlobalErrors()}">
                                             <ul class="mb-0">
                                                 <li th:each="e : ${#fields.globalErrors()}">[[${e}]]</li>
                                             </ul>
+                                        </div>
+                                        <div class="form-floating mb-3 alert alert-danger"
+                                             th:if="${errorMessage != null}">
+                                            <span>[[${errorMessage}]]</span>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="name" name="name" type="text"
@@ -57,7 +62,8 @@
                                                            type="password" placeholder="半角15文字以上"
                                                            th:field="*{password}"
                                                            th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"/>
-                                                    <label for="password">パスワード（半角15文字以上） <span class="text-danger">*</span></label>
+                                                    <label for="password">パスワード（半角15文字以上） <span
+                                                            class="text-danger">*</span></label>
                                                     <div class="invalid-feedback d-block"
                                                          th:if="${#fields.hasErrors('password')}"
                                                          th:errors="*{password}"></div>
@@ -65,11 +71,13 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="passwordConfirm" name="passwordConfirm"
+                                                    <input class="form-control" id="passwordConfirm"
+                                                           name="passwordConfirm"
                                                            type="password" placeholder="Create a password"
                                                            th:field="*{passwordConfirm}"
                                                            th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid' : ''"/>
-                                                    <label for="passwordConfirm">パスワード確認用 <span class="text-danger">*</span></label>
+                                                    <label for="passwordConfirm">パスワード確認用 <span
+                                                            class="text-danger">*</span></label>
                                                     <div class="invalid-feedback d-block"
                                                          th:if="${#fields.hasErrors('passwordConfirm')}"
                                                          th:errors="*{passwordConfirm}"></div>
