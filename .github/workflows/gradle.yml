@@ -82,7 +82,7 @@ jobs:
         run: ./gradlew bootRun &
 
       - name: Wait for Spring Boot to start
-        run: while ! curl -s http://localhost:8080 > /dev/null; do sleep 1; done
+        run: timeout 60 bash -c 'while ! curl -s http://localhost:8080 > /dev/null; do sleep 1; done'
 
       - name: Run Playwright tests
         run: npx playwright test
