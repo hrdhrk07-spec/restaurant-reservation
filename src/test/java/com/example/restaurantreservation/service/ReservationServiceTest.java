@@ -5,7 +5,6 @@ import com.example.restaurantreservation.enums.HolidayDayOfWeek;
 import com.example.restaurantreservation.form.ReservationForm;
 import com.example.restaurantreservation.repository.HolidayRepository;
 import com.example.restaurantreservation.repository.ReservationRepository;
-import com.example.restaurantreservation.repository.SeatDetailRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,9 +37,6 @@ class ReservationServiceTest {
     // モック
     @Mock
     private ReservationRepository reservationRepository;
-
-    @Mock
-    private SeatDetailRepository seatDetailRepository;
 
     @Mock
     private HolidayRepository holidayRepository;
