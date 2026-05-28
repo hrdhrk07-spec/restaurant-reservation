@@ -2,11 +2,13 @@ package com.example.restaurantreservation.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 席詳細情報を管理するエンティティクラス
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "seat_details")
 public class SeatDetail extends BaseEntity {

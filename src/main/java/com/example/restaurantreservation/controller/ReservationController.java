@@ -78,7 +78,7 @@ public class ReservationController {
         }
 
         // 予約時刻が受付時間外の場合は再度入力画面を表示
-        if (!reservationService.canReception(
+        if (!ReservationService.canReception(
                 reservationForm.getReservedAt(),
                 restaurant.getReceptionStartTime(),
                 restaurant.getReceptionEndTime())) {

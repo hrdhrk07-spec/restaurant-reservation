@@ -2,6 +2,8 @@ package com.example.restaurantreservation.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
  * レストラン情報を管理するエンティティクラス
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "restaurants")
 public class Restaurant extends BaseEntity {
@@ -57,6 +60,7 @@ public class Restaurant extends BaseEntity {
      * 定休日
      */
     @OneToMany(mappedBy = "restaurant")
+    @ToString.Exclude
     private List<Holiday> holidays;
 
 }

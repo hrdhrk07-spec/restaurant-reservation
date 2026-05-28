@@ -4,6 +4,7 @@ import com.example.restaurantreservation.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.List;
  * ユーザ情報を管理するエンティティクラス
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {

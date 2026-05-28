@@ -3,6 +3,7 @@ package com.example.restaurantreservation.entity;
 import com.example.restaurantreservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * 予約情報を管理するエンティティクラス
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "reservations")
 public class Reservation extends BaseEntity {
