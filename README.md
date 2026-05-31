@@ -85,19 +85,18 @@ PostgreSQL
 ## テスト
 
 ### テスト構成
-| 対象メソッド | 件数 | 手法 |
+| 対象 | 件数 | 手法 |
 |---|---|---|
-| `canReception`（受付時間チェック） | 25件 | 同値分割・境界値分析・デシジョンテーブル |
-| `isPastDate`（過去日時チェック） | 5件 | 同値分割・境界値分析 |
-| `isHoliday`（定休日チェック） | 3件 | 同値分割 |
-| `saveReservation`（予約登録） | 5件 | モックを用いた単体テスト |
-| `countOverlapping`（重複予約チェック） | 8件 | @DataJpaTestを用いた結合テスト・境界値分析 |
-| ユーザー登録・認証（E2Eテスト） | 6件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit） |
+| `ReservationController` | 13件 | `@WebMvcTest`を用いたControllerテスト・MockMvcによるリクエスト/レスポンス検証 |
+| `ReservationService` | 38件 | 同値分割・境界値分析・モックを用いた単体テスト |
+| `ReservationRepository` | 8件 | `@DataJpaTest`を用いた結合テスト・境界値分析 |
+| E2Eテスト（ユーザー登録・認証） | 18件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit） |
 
 
 ### 使用技術
 - **JUnit 5**：`@ParameterizedTest` / `@MethodSource` によるパラメータ化テスト
 - **Mockito**：`@Mock` / `@Spy` / `@InjectMocks` によるモック化
+- **Spring Boot Test（@WebMvcTest）**：Controller層のテスト。MockMvcを用いたリクエスト/レスポンスの検証、Hamcrestマッチャーによるモデル属性の検証
 - **Spring Boot Test（@DataJpaTest）**：Repository層の結合テスト。実際のPostgreSQLを使用し、複雑なSQLクエリの正しさを検証
 - **Playwright**：Chromium・Firefox・WebKitの3ブラウザでのE2Eテスト自動化
 - **GitHub Actions**：main ブランチへの push・PR をトリガーにテストを自動実行し、テストレポートを出力
@@ -110,7 +109,9 @@ PostgreSQL
 テストコードを書く前にテスト設計書を作成し、同値分割・境界値分析・デシジョンテーブルを用いてテストケースを洗い出しました。
 テスタビリティを意識した設計として、日時取得に Clock を導入し、テスト時に任意の日時を注入できるようにしています。
 単体テスト・結合テスト・E2Eテストのテストピラミッドを意識し、各レイヤーの役割分担を明確にしています。
-結合テストでは `@DataJpaTest` を用いてRepository層のSQLクエリを実際のPostgreSQLで検証し、E2EテストではPlaywrightを採用してユーザー登録・認証フローを3ブラウザで自動検証しています。
+Controller層の単体テストでは`@WebMvcTest`を用いてSpringのDIコンテナを部分的に起動し、MockMvcでリクエスト/レスポンスを検証、
+Repository層の結合テストでは `@DataJpaTest` を用いてSQLクエリを実際のPostgreSQLで検証、
+E2EテストではPlaywrightを採用してユーザー登録・認証フローを3ブラウザで自動検証しています。
 また、GitHub Actions による CI を導入し、main ブランチへの push・PR をトリガーに単体テスト・結合テスト・E2Eテストが自動実行される環境を整えています。
 
 ### レイヤーの役割分担を意識した設計

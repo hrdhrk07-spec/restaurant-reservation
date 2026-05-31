@@ -222,11 +222,10 @@ public class ReservationController {
      *
      * @param userDetails ユーザ情報
      * @param id          予約ID
-     * @param model       Modelオブジェクト
      * @return レストラン一覧画面のテンプレートパス
      */
     @PostMapping("/cancel-complete")
-    public String cancelPost(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("id") Long id, Model model) {
+    public String cancelPost(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("id") Long id) {
 
         // 予約情報の取得
         Reservation reservation = reservationService.getReservationById(id);
