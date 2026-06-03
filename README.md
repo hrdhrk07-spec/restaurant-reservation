@@ -26,12 +26,14 @@ Spring Boot を用いて構築したレストラン予約管理システムで�
 ## 機能一覧
 
 ### ユーザー機能
+
 - 新規会員登録・ログイン／ログアウト
 - レストラン一覧・詳細表示
 - 空席確認・予約申し込み
 - 予約履歴の確認・キャンセル
 
 ### 管理者機能
+
 - レストランの登録・編集・削除
 - 席種別（人数・席数・利用時間）の複数登録・編集
 - 定休日の登録・管理
@@ -41,16 +43,16 @@ Spring Boot を用いて構築したレストラン予約管理システムで�
 
 ## 技術スタック
 
-| 役割 | 技術                              |
-|---|---------------------------------|
-| バックエンド | Spring Boot 3.5.13              |
+| 役割      | 技術                              |
+|---------|---------------------------------|
+| バックエンド  | Spring Boot 3.5.13              |
 | フロントエンド | Thymeleaf / Bootstrap 5         |
-| データベース | PostgreSQL 17                   |
-| 認証 | Spring Security                 |
-| ORM | Spring Data JPA                 |
-| ビルドツール | Gradle                          |
-| 開発環境 | IntelliJ IDEA / JDK 21          |
-| その他 | Lombok / Validation / flatpickr |
+| データベース  | PostgreSQL 17                   |
+| 認証      | Spring Security                 |
+| ORM     | Spring Data JPA                 |
+| ビルドツール  | Gradle                          |
+| 開発環境    | IntelliJ IDEA / JDK 21          |
+| その他     | Lombok / Validation / flatpickr |
 
 ---
 
@@ -75,9 +77,11 @@ PostgreSQL
 実装に入る前に、画面遷移図と ER 図を作成して全体設計を行いました。事前設計により、実装中の手戻りを最小限に抑えることができました。
 
 ### 画面遷移図
+
 ![画面遷移図](docs/画面遷移図.svg)
 
 ### ER図
+
 ![ER図](docs/ER図.svg)
 
 ---
@@ -85,15 +89,20 @@ PostgreSQL
 ## テスト
 
 ### テスト構成
-| 対象 | 件数 | 手法 |
-|---|---|---|
-| `ReservationController` | 13件 | `@WebMvcTest`を用いたControllerテスト・MockMvcによるリクエスト/レスポンス検証 |
-| `ReservationService` | 38件 | 同値分割・境界値分析・モックを用いた単体テスト |
-| `ReservationRepository` | 8件 | `@DataJpaTest`を用いた結合テスト・境界値分析 |
-| E2Eテスト（ユーザー登録・認証） | 18件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit） |
 
+| 対象                      | 件数  | 手法                                                     |
+|-------------------------|-----|--------------------------------------------------------|
+| `ReservationController` | 13件 | `@WebMvcTest`を用いたControllerテスト・MockMvcによるリクエスト/レスポンス検証 |
+| `ReservationService`    | 38件 | 同値分割・境界値分析・モックを用いた単体テスト                                |
+| `ReservationRepository` | 8件  | `@DataJpaTest`を用いた結合テスト・境界値分析                          |
+| E2Eテスト（ユーザー登録・認証）       | 18件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit）          |
+| E2Eテスト（予約フロー）           | 5件  | Playwrightを用いたE2Eテスト（Chromium）                         |
+
+※ 過去日時エラーのE2Eテストは未実装。flatpickrで今日の過去時刻が入力可能な問題と合わせてIssue #1 で管理。
+※ 予約フローのE2EテストはDBクリーンアップ未実装のため現在Chromiumのみで実行。Issue #2 で管理。
 
 ### 使用技術
+
 - **JUnit 5**：`@ParameterizedTest` / `@MethodSource` によるパラメータ化テスト
 - **Mockito**：`@Mock` / `@Spy` / `@InjectMocks` によるモック化
 - **Spring Boot Test（@WebMvcTest）**：Controller層のテスト。MockMvcを用いたリクエスト/レスポンスの検証、Hamcrestマッチャーによるモデル属性の検証
@@ -106,23 +115,30 @@ PostgreSQL
 ## 工夫した点
 
 ### テスト設計からCI導入までの一貫した取り組み
+
 テストコードを書く前にテスト設計書を作成し、同値分割・境界値分析・デシジョンテーブルを用いてテストケースを洗い出しました。  
 テスタビリティを意識した設計として、日時取得に Clock を導入し、テスト時に任意の日時を注入できるようにしています。  
 単体テスト・結合テスト・E2Eテストのテストピラミッドを意識し、各レイヤーの役割分担を明確にしています。  
-Controller層の単体テストでは`@WebMvcTest`を用いてSpringのDIコンテナを部分的に起動し、MockMvcでリクエスト/レスポンスを検証、  
+Controller層の単体テストでは`@WebMvcTest`
+を用いてSpringのDIコンテナを部分的に起動し、MockMvcでリクエスト/レスポンスを検証、  
 Repository層の結合テストでは `@DataJpaTest` を用いてSQLクエリを実際のPostgreSQLで検証、  
-E2EテストではPlaywrightを採用してユーザー登録・認証フローを3ブラウザで自動検証しています。  
-また、GitHub Actions による CI を導入し、main ブランチへの push・PR をトリガーに単体テスト・結合テスト・E2Eテストが自動実行される環境を整えています。  
+E2EテストではPlaywrightを採用し、ユーザー登録・認証フローを3ブラウザで、予約フロー（検索〜予約〜キャンセル）をChromiumで自動検証しています。  
+Page Objectパターンで画面単位に操作を分離し、beforeEachでPage
+Objectの初期化とログインを共通化することで保守性を高めています。   
+また、GitHub Actions による CI を導入し、main ブランチへの push・PR をトリガーに単体テスト・結合テスト・E2Eテストが自動実行される環境を整えています。
 
 ### レイヤーの役割分担を意識した設計
+
 Controller・Service・Repository それぞれの役割に沿った実装を意識しました。  
 ビジネスロジックは Service に集約し、Controller は受け取ったリクエストを Service に委譲するだけのシンプルな構成にしています。
 
 ### Javadoc・コメントによる可読性の向上
+
 チーム開発を意識し、クラスやメソッドに Javadoc を付与しました。  
 処理の意図が伝わるよう適切にコメントを記載することで、第三者が読んでも理解しやすいコードを心がけました。
 
 ### 予約登録時の4つのチェック
+
 予約登録時に必要なチェックを検討し、不要なデータの登録や予約の重複が起こらないようにしました。
 
 1. 過去日時チェック
@@ -135,6 +151,7 @@ Controller・Service・Repository それぞれの役割に沿った実装を意�
 ## セットアップ手順
 
 ### 前提条件
+
 - JDK 21
 - PostgreSQL 17
 - Gradle
@@ -142,13 +159,16 @@ Controller・Service・Repository それぞれの役割に沿った実装を意�
 ### 手順
 
 **1. リポジトリをクローン**
+
 ```bash
 git clone https://github.com/hrdhrk07-spec/restaurant-reservation.git
 ```
 
 **2. データベースを作成**
+
 ```sql
-CREATE DATABASE restaurant_reservation;
+CREATE
+DATABASE restaurant_reservation;
 ```
 
 **3. 環境変数を設定**
@@ -176,6 +196,7 @@ IntelliJを用いる場合は先ほどの構成で実行してください。コ
 ```
 
 **5. ブラウザでアクセス**
+
 ```
 http://localhost:8080
 ```

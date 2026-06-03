@@ -87,14 +87,15 @@ jobs:
       - name: Wait for Spring Boot to start
         run: timeout 60 bash -c 'while ! curl -s http://localhost:8080 > /dev/null; do sleep 1; done'
 
+      - name: Create .env file
+        run: |
+          cat << 'EOF' > e2e/.env
+          ${{ secrets.ENV_FILE }}
+          EOF
+
       - name: Run Playwright tests
         run: npx playwright test
         working-directory: e2e
-        env:
-          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
-          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
-          TEST_ADMIN_EMAIL: ${{ secrets.TEST_ADMIN_EMAIL }}
-          TEST_ADMIN_PASSWORD: ${{ secrets.TEST_ADMIN_PASSWORD }}
 
       - name: Publish Playwright Test Report
         uses: mikepenz/action-junit-report@v6

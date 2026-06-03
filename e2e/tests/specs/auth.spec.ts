@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
-import {LoginPage} from "../pages/LoginPage";
-import {RegisterPage} from "../pages/RegisterPage";
-import {RegisterCompletePage} from "../pages/RegisterCompletePage";
+import {LoginPage} from '../pages/LoginPage';
+import {RegisterPage} from '../pages/RegisterPage';
+import {RegisterCompletePage} from '../pages/RegisterCompletePage';
 
 test('ユーザ登録_正常系', async ({page}) => {
 
@@ -47,7 +47,7 @@ test('ユーザ登録_異常系_必須項目未入力', async ({page}) => {
     await registerPage.clickRegisterButton();
 
     await expect(page).toHaveTitle(/レストラン予約システム - 新規登録/);
-    await expect(page.getByText("空白は許可されていません").first()).toBeVisible();
+    await expect(page.getByText('空白は許可されていません').first()).toBeVisible();
 
 });
 
@@ -73,7 +73,7 @@ test('ユーザ登録_異常系_パスワード不一致', async ({page}) => {
     await registerPage.clickRegisterButton();
 
     await expect(page).toHaveTitle(/レストラン予約システム - 新規登録/);
-    await expect(page.getByText("パスワードが一致しません")).toBeVisible();
+    await expect(page.getByText('パスワードが一致しません')).toBeVisible();
 
 });
 
@@ -115,6 +115,6 @@ test('ログイン_異常系', async ({page}) => {
     await loginPage.clickLoginButton();
 
     await expect(page).toHaveTitle(/レストラン予約システム - ログイン/);
-    await expect(page.getByText("ユーザー認証に失敗しました。未登録の方は新規登録をお願いいたします。")).toBeVisible();
+    await expect(page.getByText('ユーザー認証に失敗しました。未登録の方は新規登録をお願いいたします。')).toBeVisible();
 
 });
