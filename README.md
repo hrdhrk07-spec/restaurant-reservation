@@ -92,13 +92,12 @@ PostgreSQL
 
 | 対象                      | 件数  | 手法                                                     |
 |-------------------------|-----|--------------------------------------------------------|
-| `ReservationController` | 13件 | `@WebMvcTest`を用いたControllerテスト・MockMvcによるリクエスト/レスポンス検証 |
+| `ReservationController` | 14件 | `@WebMvcTest`を用いたControllerテスト・MockMvcによるリクエスト/レスポンス検証 |
 | `ReservationService`    | 38件 | 同値分割・境界値分析・モックを用いた単体テスト                                |
 | `ReservationRepository` | 8件  | `@DataJpaTest`を用いた結合テスト・境界値分析                          |
 | E2Eテスト（ユーザー登録・認証）       | 18件 | Playwrightを用いたE2Eテスト（Chromium・Firefox・WebKit）          |
-| E2Eテスト（予約フロー）           | 5件  | Playwrightを用いたE2Eテスト（Chromium）                         |
+| E2Eテスト（予約フロー）           | 6件  | Playwrightを用いたE2Eテスト（Chromium）                         |
 
-※ 過去日時エラーのE2Eテストは未実装。flatpickrで今日の過去時刻が入力可能な問題と合わせてIssue #1 で管理。
 ※ 予約フローのE2EテストはDBクリーンアップ未実装のため現在Chromiumのみで実行。Issue #2 で管理。
 
 ### 使用技術
@@ -142,8 +141,8 @@ Controller・Service・Repository それぞれの役割に沿った実装を意�
 予約登録時に必要なチェックを検討し、不要なデータの登録や予約の重複が起こらないようにしました。
 
 1. 過去日時チェック
-2. 定休日チェック
-3. 受付時間チェック
+2. 受付時間チェック
+3. 定休日チェック
 4. 重複予約チェック
 
 ---

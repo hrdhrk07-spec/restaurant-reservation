@@ -181,12 +181,12 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約入力画面(POST)_定休日エラー")
-    void inputPost_holidayError() throws Exception {
+    @DisplayName("予約入力画面(POST)_過去日時エラー")
+    void inputPost_pastDateError() throws Exception {
 
         // モックの設定
         when(restaurantService.getRestaurantById(any())).thenReturn(restaurant);
-        when(reservationService.isHoliday(any(), any())).thenReturn(true);
+        when(reservationService.isPastDate(any())).thenReturn(true);
 
         // リクエストの実行と期待結果の検証
         mockMvc.perform(MockMvcRequestBuilders
@@ -199,7 +199,7 @@ public class ReservationControllerTest {
                 .andExpectAll(
                         view().name("user/reservation-input"),
                         model().attribute("restaurant", restaurant),
-                        model().attribute("holidayError", not(emptyOrNullString()))
+                        model().attribute("pastDateError", not(emptyOrNullString()))
                 );
 
     }
@@ -210,7 +210,6 @@ public class ReservationControllerTest {
 
         // モックの設定
         when(restaurantService.getRestaurantById(any())).thenReturn(restaurant);
-        when(reservationService.isHoliday(any(), any())).thenReturn(false);
 
         // 受付時間外となる予約日時の設定
         LocalDate date = LocalDate.now(ZoneId.of("Asia/Tokyo")).plusDays(1L);
@@ -233,6 +232,36 @@ public class ReservationControllerTest {
                         view().name("user/reservation-input"),
                         model().attribute("restaurant", restaurant),
                         model().attribute("receptionError", not(emptyOrNullString()))
+                );
+
+    }
+
+    @Test
+    @DisplayName("予約入力画面(POST)_定休日エラー")
+    void inputPost_holidayError() throws Exception {
+
+        // モックの設定
+        when(restaurantService.getRestaurantById(any())).thenReturn(restaurant);
+        when(reservationService.isHoliday(any(), any())).thenReturn(true);
+
+        // 受付時間外エラーにならない予約日時の設定
+        LocalDate date = LocalDate.now(ZoneId.of("Asia/Tokyo")).plusDays(1L);
+        LocalDateTime time = LocalDateTime.of(date, LocalTime.of(20, 0));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+        String reservedAt = time.format(formatter);
+
+        // リクエストの実行と期待結果の検証
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/reservation-input/1000")
+                        .sessionAttr("reservationForm", new ReservationForm())
+                        .with(csrf())
+                        .param("reservedAt", reservedAt)
+                        .param("numberOfGuests", "2")
+                )
+                .andExpectAll(
+                        view().name("user/reservation-input"),
+                        model().attribute("restaurant", restaurant),
+                        model().attribute("holidayError", not(emptyOrNullString()))
                 );
 
     }

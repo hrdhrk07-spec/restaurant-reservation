@@ -61,11 +61,14 @@
                         <div class="mb-3 text-center" th:if="${noSeats}">
                             <p class="text-danger">条件に合う空席がありません。</p>
                         </div>
-                        <div class="mb-3 text-center" th:if="${!#strings.isEmpty(holidayError)}">
-                            <p class="text-danger" th:text="${holidayError}"></p>
+                        <div class="mb-3 text-center" th:if="${!#strings.isEmpty(pastDateError)}">
+                            <p class="text-danger" th:text="${pastDateError}"></p>
                         </div>
                         <div class="mb-3 text-center" th:if="${!#strings.isEmpty(receptionError)}">
                             <p class="text-danger" th:text="${receptionError}"></p>
+                        </div>
+                        <div class="mb-3 text-center" th:if="${!#strings.isEmpty(holidayError)}">
+                            <p class="text-danger" th:text="${holidayError}"></p>
                         </div>
                         <div class="mt-4 mb-0 d-flex justify-content-center">
                             <input th:unless="${hasSeats}" type="submit"

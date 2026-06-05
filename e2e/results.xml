@@ -1,14 +1,16 @@
-<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="2.013528">
-<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-03T09:19:28.017Z" hostname="chromium" tests="5" failures="0" skipped="0" time="4.65" errors="0">
-<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="1.159">
+<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="3.321674">
+<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-05T07:34:16.243Z" hostname="chromium" tests="6" failures="0" skipped="0" time="12.875" errors="0">
+<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="2.59">
 </testcase>
-<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="1.393">
+<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="2.751">
 </testcase>
-<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="0.541">
+<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="1.624">
 </testcase>
-<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="0.78">
+<testcase name="異常系 › 予約入力時過去日時エラー" classname="specs\reservation.spec.ts" time="1.964">
 </testcase>
-<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="0.777">
+<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="1.936">
+</testcase>
+<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="2.01">
 </testcase>
 </testsuite>
 </testsuites>

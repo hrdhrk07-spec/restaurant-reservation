@@ -1,4 +1,4 @@
-import {expect, test} from '@playwright/test';
+import {expect, Page, test} from '@playwright/test';
 import {LoginPage} from '../pages/LoginPage';
 import {HomePage} from '../pages/HomePage';
 import {RestaurantListPage} from '../pages/RestaurantListPage';
@@ -51,6 +51,27 @@ function getReservedAt(isPast: boolean, isHoliday: boolean, canReception: boolea
     const minute = date.getMinutes().toString().padStart(2, '0');
 
     return year + '/' + month + '/' + day + ' ' + hour + ':' + minute;
+
+}
+
+// 異常系用の共通処理のヘルパー関数
+async function goReservationInputPage(page: Page, homePage: HomePage, restaurantListPage: RestaurantListPage, restaurantDetailPage: RestaurantDetailPage) {
+
+    // ホーム画面
+    await homePage.goto();
+    await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
+    await homePage.clickSearchButton();
+
+    // レストラン一覧画面
+    await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
+    await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
+
+    // レストラン詳細画面
+    await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
+    await restaurantDetailPage.clickReservationButton();
+
+    // 予約入力画面
+    await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
 
 }
 
@@ -200,7 +221,7 @@ test.describe('正常系', () => {
         await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
 
         // 予約日時、人数入力
-        const reservedAt = getReservedAt(false, false, true, 2);
+        const reservedAt = getReservedAt(false, false, true, 8);
         await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
@@ -322,33 +343,24 @@ test.describe('異常系', () => {
 
     });
 
-    // 過去日時エラーは後で実装
+    test('予約入力時過去日時エラー', async ({page}) => {
+
+        // 予約入力画面へ進む
+        await goReservationInputPage(page, homePage, restaurantListPage, restaurantDetailPage);
+
+        // 予約日時、人数入力
+        const reservedAt = getReservedAt(true, false, true, 0);
+        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.clickSeatAvailabilityButton();
+
+        await expect(page.getByText('選択した日時は過去日時です。')).toBeVisible();
+
+    });
 
     test('予約入力時受付時間外エラー', async ({page}) => {
 
-        // ホーム画面
-        await homePage.goto();
-        await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
-        await homePage.clickSearchButton();
-
-        // レストラン一覧画面
-        await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
-
-        // レストラン詳細画面
-        await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_LOCATION)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await expect(page.getByText(process.env.TEST_HOLIDAY)).toBeVisible();
-        await restaurantDetailPage.clickReservationButton();
-
-        // 予約入力画面
-        await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
+        // 予約入力画面へ進む
+        await goReservationInputPage(page, homePage, restaurantListPage, restaurantDetailPage);
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(false, false, false, 1);
@@ -361,29 +373,8 @@ test.describe('異常系', () => {
 
     test('席決定時対応する席詳細が無い', async ({page}) => {
 
-        // ホーム画面
-        await homePage.goto();
-        await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
-        await homePage.clickSearchButton();
-
-        // レストラン一覧画面
-        await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
-
-        // レストラン詳細画面
-        await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_LOCATION)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await expect(page.getByText(process.env.TEST_HOLIDAY)).toBeVisible();
-        await restaurantDetailPage.clickReservationButton();
-
-        // 予約入力画面
-        await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
+        // 予約入力画面へ進む
+        await goReservationInputPage(page, homePage, restaurantListPage, restaurantDetailPage);
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(false, false, true, 1);

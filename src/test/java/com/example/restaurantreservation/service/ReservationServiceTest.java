@@ -161,6 +161,34 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("受付時間外への予約")
+    void saveReservation_canReception() {
+
+        // 席詳細がレストランを返せるようにモック
+        Restaurant restaurant = mock(Restaurant.class);
+        SeatDetail seatDetail = mock(SeatDetail.class);
+        when(seatDetail.getRestaurant()).thenReturn(restaurant);
+
+        // このケースではcanReceptionがfalseを返すように予約日時を設定
+        ReservationForm reservationForm = new ReservationForm();
+        reservationForm.setReservedAt(LocalDateTime.of(2026,5,20,15,0,0));
+
+        // isPastDateがfalseを返すようにモック
+        doReturn(false).when(reservationService).isPastDate(any());
+
+        // canReceptionがfalseを返すように受付時間をモック
+        when(restaurant.getReceptionStartTime()).thenReturn(LocalTime.of(19,0));
+        when(restaurant.getReceptionEndTime()).thenReturn(LocalTime.of(22,0));
+
+        // 期待結果
+        assertThrows(
+                RuntimeException.class,
+                () -> reservationService.saveReservation(mock(User.class), seatDetail, reservationForm)
+        );
+
+    }
+
+    @Test
     @DisplayName("定休日への予約")
     void saveReservation_isHoliday() {
 
@@ -177,37 +205,6 @@ class ReservationServiceTest {
 
         // isHolidayがtrueを返すようにモック
         doReturn(true).when(reservationService).isHoliday(any(), any());
-
-        // 期待結果
-        assertThrows(
-                RuntimeException.class,
-                () -> reservationService.saveReservation(mock(User.class), seatDetail, reservationForm)
-        );
-
-    }
-
-    @Test
-    @DisplayName("受付時間外への予約")
-    void saveReservation_canReception() {
-
-        // 席詳細がレストランを返せるようにモック
-        Restaurant restaurant = mock(Restaurant.class);
-        SeatDetail seatDetail = mock(SeatDetail.class);
-        when(seatDetail.getRestaurant()).thenReturn(restaurant);
-
-        // このケースではcanReceptionがfalseを返すように予約日時を設定
-        ReservationForm reservationForm = new ReservationForm();
-        reservationForm.setReservedAt(LocalDateTime.of(2026,5,20,15,0,0));
-
-        // isPastDateがfalseを返すようにモック
-        doReturn(false).when(reservationService).isPastDate(any());
-
-        // isHolidayがfalseを返すようにモック
-        doReturn(false).when(reservationService).isHoliday(any(), any());
-
-        // canReceptionがfalseを返すように受付時間をモック
-        when(restaurant.getReceptionStartTime()).thenReturn(LocalTime.of(19,0));
-        when(restaurant.getReceptionEndTime()).thenReturn(LocalTime.of(22,0));
 
         // 期待結果
         assertThrows(

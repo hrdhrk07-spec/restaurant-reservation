@@ -164,14 +164,14 @@ public class ReservationService {
             throw new RuntimeException("過去日時への予約");
         }
 
-        // 定休日チェック
-        if (isHoliday(restaurant.getId(), reservedAt)) {
-            throw new RuntimeException("定休日への予約");
-        }
-
         // 受付時間チェック
         if (!canReception(reservedAt, restaurant.getReceptionStartTime(), restaurant.getReceptionEndTime())) {
             throw new RuntimeException("受付時間外への予約");
+        }
+
+        // 定休日チェック
+        if (isHoliday(restaurant.getId(), reservedAt)) {
+            throw new RuntimeException("定休日への予約");
         }
 
         // 重複している予約の数を取得

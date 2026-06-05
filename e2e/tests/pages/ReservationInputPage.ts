@@ -5,9 +5,10 @@ export class ReservationInputPage {
     }
 
     async fillReservationForm(reservedAt: string, numberOfGuests: string) {
+        await this.page.locator('#reservedAt').waitFor();
         await this.page.evaluate((date) => {
-            const input = document.querySelector('#reservedAt') as any;
-            input._flatpickr.setDate(date);
+            const input = document.querySelector('#reservedAt') as HTMLInputElement;
+            input.value = date;
         }, reservedAt);
         await this.page.locator('#numberOfGuests').fill(numberOfGuests);
     }
