@@ -9,6 +9,23 @@ import {ReservationCompletePage} from '../pages/ReservationCompletePage';
 import {ReservationListPage} from "../pages/ReservationListPage";
 import {CancelConfirmPage} from "../pages/CancelConfirmPage";
 import {CancelCompletePage} from "../pages/CancelCompletePage";
+import {createUser} from '../helpers/userHelper';
+import {
+    TEST_USER_EMAIL,
+    TEST_USER_PASSWORD,
+    TEST_LOCATION,
+    TEST_CUISINE_TYPE,
+    TEST_RESTAURANT_NAME,
+    TEST_HOLIDAY,
+    TEST_HOLIDAY_NUMBER1,
+    TEST_HOLIDAY_NUMBER2,
+    TEST_RECEPTION_TIME,
+    TEST_NUMBER_OF_GUESTS,
+    TEST_SEAT_DETAIL1,
+    TEST_SEAT_DETAIL2,
+    TEST_RESERVATION_STATUS_CONFIRMED,
+    TEST_RESERVATION_STATUS_CANCELLED
+} from "../helpers/envHelper";
 
 // 予約日時作成用のヘルパー関数
 function getReservedAt(isPast: boolean, isHoliday: boolean, canReception: boolean, daysOffset: number) {
@@ -25,11 +42,11 @@ function getReservedAt(isPast: boolean, isHoliday: boolean, canReception: boolea
 
         // 定休日かどうか
         if (isHoliday) {
-            while (date.getDay() != Number(process.env.TEST_HOLIDAY_NUMBER1) && date.getDay() != Number(process.env.TEST_HOLIDAY_NUMBER2)) {
+            while (date.getDay() != Number(TEST_HOLIDAY_NUMBER1) && date.getDay() != Number(TEST_HOLIDAY_NUMBER2)) {
                 date.setDate(date.getDate() + 1)
             }
         } else {
-            while (date.getDay() == Number(process.env.TEST_HOLIDAY_NUMBER1) || date.getDay() == Number(process.env.TEST_HOLIDAY_NUMBER2)) {
+            while (date.getDay() == Number(TEST_HOLIDAY_NUMBER1) || date.getDay() == Number(TEST_HOLIDAY_NUMBER2)) {
                 date.setDate(date.getDate() + 1)
             }
         }
@@ -59,12 +76,12 @@ async function goReservationInputPage(page: Page, homePage: HomePage, restaurant
 
     // ホーム画面
     await homePage.goto();
-    await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
+    await homePage.fillSearchForm(TEST_LOCATION, TEST_CUISINE_TYPE, TEST_RESTAURANT_NAME);
     await homePage.clickSearchButton();
 
     // レストラン一覧画面
     await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
-    await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
+    await restaurantListPage.clickRestaurant(TEST_RESTAURANT_NAME);
 
     // レストラン詳細画面
     await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
@@ -104,8 +121,8 @@ test.describe('正常系', () => {
         cancelCompletePage = new CancelCompletePage(page);
 
         // ログイン画面
-        await loginPage.goto();
-        await loginPage.fillLoginForm(process.env.TEST_USER_EMAIL ?? '', process.env.TEST_USER_PASSWORD ?? '');
+        const userInfo: string[] = await createUser(page);
+        await loginPage.fillLoginForm(userInfo[0], userInfo[1]);
         await loginPage.clickLoginButton();
 
         // ユーザ用ホーム画面
@@ -117,70 +134,70 @@ test.describe('正常系', () => {
 
         // ホーム画面
         await homePage.goto();
-        await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
+        await homePage.fillSearchForm(TEST_LOCATION, TEST_CUISINE_TYPE, TEST_RESTAURANT_NAME);
         await homePage.clickSearchButton();
 
         // レストラン一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.locator('p', {hasText: TEST_CUISINE_TYPE}).first()).toBeVisible();
+        await restaurantListPage.clickRestaurant(TEST_RESTAURANT_NAME);
 
         // レストラン詳細画面
         await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_LOCATION)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await expect(page.getByText(process.env.TEST_HOLIDAY)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_LOCATION)).toBeVisible();
+        await expect(page.locator('p', {hasText: TEST_CUISINE_TYPE}).first()).toBeVisible();
+        await expect(page.getByText(TEST_HOLIDAY)).toBeVisible();
         await restaurantDetailPage.clickReservationButton();
 
         // 予約入力画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RECEPTION_TIME)).toBeVisible();
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(false, false, true, 1);
-        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.fillReservationForm(reservedAt, TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
         // 席選択（ここでは２つ目の席詳細を選択）
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL1)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
-        await reservationInputPage.clickSeatDetailRadioButton(process.env.TEST_SEAT_DETAIL2);
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL1)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
+        await reservationInputPage.clickSeatDetailRadioButton(TEST_SEAT_DETAIL2);
         await reservationInputPage.clickSeatSelectionButton();
 
         // 予約確認画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約確認/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
         await reservationConfirmPage.clickReservationButton();
 
         // 予約完了画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約完了/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
+        await expect(page.getByText(TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
         await reservationCompletePage.clickReservationListButton();
 
         // 予約一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約一覧/);
         const reservationRow = page.locator('.py-3.border-top', {hasText: reservedAt}).first();
-        await expect(reservationRow.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(reservationRow.getByText(process.env.TEST_RESERVATION_STATUS_CONFIRMED)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESERVATION_STATUS_CONFIRMED)).toBeVisible();
         await reservationListPage.clickCancelButton();
 
         // キャンセル確認画面
         await expect(page).toHaveTitle(/レストラン予約システム - キャンセル確認/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
+        await expect(page.getByText(TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
         await cancelConfirmPage.clickCancelButton();
 
         // キャンセル完了画面
@@ -189,7 +206,7 @@ test.describe('正常系', () => {
 
         // 予約一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約一覧/);
-        await expect(reservationRow.getByText(process.env.TEST_RESERVATION_STATUS_CANCELLED)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESERVATION_STATUS_CANCELLED)).toBeVisible();
 
     });
 
@@ -197,98 +214,98 @@ test.describe('正常系', () => {
 
         // ホーム画面
         await homePage.goto();
-        await homePage.fillSearchForm(process.env.TEST_LOCATION, process.env.TEST_CUISINE_TYPE, process.env.TEST_RESTAURANT_NAME);
+        await homePage.fillSearchForm(TEST_LOCATION, TEST_CUISINE_TYPE, TEST_RESTAURANT_NAME);
         await homePage.clickSearchButton();
 
         // レストラン一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - レストラン一覧/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await restaurantListPage.clickRestaurant(process.env.TEST_RESTAURANT_NAME);
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.locator('p', {hasText: TEST_CUISINE_TYPE}).first()).toBeVisible();
+        await restaurantListPage.clickRestaurant(TEST_RESTAURANT_NAME);
 
         // レストラン詳細画面
         await expect(page).toHaveTitle(/レストラン予約システム - レストラン詳細/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_LOCATION)).toBeVisible();
-        await expect(page.locator('p', {hasText: process.env.TEST_CUISINE_TYPE}).first()).toBeVisible();
-        await expect(page.getByText(process.env.TEST_HOLIDAY)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_LOCATION)).toBeVisible();
+        await expect(page.locator('p', {hasText: TEST_CUISINE_TYPE}).first()).toBeVisible();
+        await expect(page.getByText(TEST_HOLIDAY)).toBeVisible();
         await restaurantDetailPage.clickReservationButton();
 
         // 予約1回目（予約確認時キャンセル）
         // 予約入力画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RECEPTION_TIME)).toBeVisible();
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(false, false, true, 8);
-        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.fillReservationForm(reservedAt, TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
         // 席選択（ここでは２つ目の席詳細を選択）
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL1)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
-        await reservationInputPage.clickSeatDetailRadioButton(process.env.TEST_SEAT_DETAIL2);
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL1)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
+        await reservationInputPage.clickSeatDetailRadioButton(TEST_SEAT_DETAIL2);
         await reservationInputPage.clickSeatSelectionButton();
 
         // 予約確認画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約確認/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
         await reservationConfirmPage.clickCancelButton();
 
         // 予約2回目
         // 予約入力画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_RECEPTION_TIME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RECEPTION_TIME)).toBeVisible();
 
         // 予約日時、人数入力
-        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.fillReservationForm(reservedAt, TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
         // 席選択（ここでは２つ目の席詳細を選択）
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL1)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
-        await reservationInputPage.clickSeatDetailRadioButton(process.env.TEST_SEAT_DETAIL2);
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('span').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL1)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
+        await reservationInputPage.clickSeatDetailRadioButton(TEST_SEAT_DETAIL2);
         await reservationInputPage.clickSeatSelectionButton();
 
         // 予約確認画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約確認/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(process.env.TEST_NUMBER_OF_GUESTS)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
+        await expect(page.locator('tr', {hasText: '予約人数'}).locator('td').first().getByText(TEST_NUMBER_OF_GUESTS)).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
         await reservationConfirmPage.clickReservationButton();
 
         // 予約完了画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約完了/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
+        await expect(page.getByText(TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
         await reservationCompletePage.clickReservationListButton();
 
         // 予約一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約一覧/);
         const reservationRow = page.locator('.py-3.border-top', {hasText: reservedAt}).first();
-        await expect(reservationRow.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
-        await expect(reservationRow.getByText(process.env.TEST_RESERVATION_STATUS_CONFIRMED)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESERVATION_STATUS_CONFIRMED)).toBeVisible();
         await reservationListPage.clickCancelButton();
 
         // キャンセル確認画面
         await expect(page).toHaveTitle(/レストラン予約システム - キャンセル確認/);
-        await expect(page.getByText(process.env.TEST_RESTAURANT_NAME)).toBeVisible();
+        await expect(page.getByText(TEST_RESTAURANT_NAME)).toBeVisible();
         await expect(page.getByText(reservedAt)).toBeVisible();
-        await expect(page.getByText(process.env.TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
-        await expect(page.getByText(process.env.TEST_SEAT_DETAIL2)).toBeVisible();
+        await expect(page.getByText(TEST_NUMBER_OF_GUESTS + '人')).toBeVisible();
+        await expect(page.getByText(TEST_SEAT_DETAIL2)).toBeVisible();
         await cancelConfirmPage.clickCancelButton();
 
         // キャンセル完了画面
@@ -297,7 +314,7 @@ test.describe('正常系', () => {
 
         // 予約一覧画面
         await expect(page).toHaveTitle(/レストラン予約システム - 予約一覧/);
-        await expect(reservationRow.getByText(process.env.TEST_RESERVATION_STATUS_CANCELLED)).toBeVisible();
+        await expect(reservationRow.getByText(TEST_RESERVATION_STATUS_CANCELLED)).toBeVisible();
 
     });
 
@@ -322,7 +339,7 @@ test.describe('異常系', () => {
 
         // ログイン画面
         await loginPage.goto();
-        await loginPage.fillLoginForm(process.env.TEST_USER_EMAIL ?? '', process.env.TEST_USER_PASSWORD ?? '');
+        await loginPage.fillLoginForm(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         await loginPage.clickLoginButton();
 
         // ユーザ用ホーム画面
@@ -350,7 +367,7 @@ test.describe('異常系', () => {
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(true, false, true, 0);
-        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.fillReservationForm(reservedAt, TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
         await expect(page.getByText('選択した日時は過去日時です。')).toBeVisible();
@@ -364,7 +381,7 @@ test.describe('異常系', () => {
 
         // 予約日時、人数入力
         const reservedAt = getReservedAt(false, false, false, 1);
-        await reservationInputPage.fillReservationForm(reservedAt, process.env.TEST_NUMBER_OF_GUESTS);
+        await reservationInputPage.fillReservationForm(reservedAt, TEST_NUMBER_OF_GUESTS);
         await reservationInputPage.clickSeatAvailabilityButton();
 
         await expect(page.getByText('選択した時刻は受付時間外です。')).toBeVisible();

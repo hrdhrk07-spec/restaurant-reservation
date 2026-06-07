@@ -1,16 +1,86 @@
-<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="3.321674">
-<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-05T07:34:16.243Z" hostname="chromium" tests="6" failures="0" skipped="0" time="12.875" errors="0">
-<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="2.59">
+<testsuites id="" name="" tests="36" failures="0" skipped="0" errors="0" time="247.50980900000002">
+<testsuite name="specs\auth.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="chromium" tests="6" failures="0" skipped="0" time="4.016" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="0.759">
 </testcase>
-<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="2.751">
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="0.504">
 </testcase>
-<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="1.624">
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="0.75">
 </testcase>
-<testcase name="異常系 › 予約入力時過去日時エラー" classname="specs\reservation.spec.ts" time="1.964">
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="0.702">
 </testcase>
-<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="1.936">
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="0.761">
 </testcase>
-<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="2.01">
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="0.54">
+</testcase>
+</testsuite>
+<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="chromium" tests="6" failures="0" skipped="0" time="7.648" errors="0">
+<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="1.97">
+</testcase>
+<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="2.313">
+</testcase>
+<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="0.671">
+</testcase>
+<testcase name="異常系 › 予約入力時過去日時エラー" classname="specs\reservation.spec.ts" time="0.872">
+</testcase>
+<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="0.966">
+</testcase>
+<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="0.856">
+</testcase>
+</testsuite>
+<testsuite name="specs\auth.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="firefox" tests="6" failures="0" skipped="0" time="14.784" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="2.303">
+</testcase>
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="1.618">
+</testcase>
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="1.742">
+</testcase>
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="3.031">
+</testcase>
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="3.321">
+</testcase>
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="2.769">
+</testcase>
+</testsuite>
+<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="firefox" tests="6" failures="0" skipped="0" time="17.241" errors="0">
+<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="4.877">
+</testcase>
+<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="6.114">
+</testcase>
+<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="0.977">
+</testcase>
+<testcase name="異常系 › 予約入力時過去日時エラー" classname="specs\reservation.spec.ts" time="1.744">
+</testcase>
+<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="1.742">
+</testcase>
+<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="1.787">
+</testcase>
+</testsuite>
+<testsuite name="specs\auth.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="webkit" tests="6" failures="0" skipped="0" time="8.109" errors="0">
+<testcase name="ユーザ登録_正常系" classname="specs\auth.spec.ts" time="1.853">
+</testcase>
+<testcase name="ユーザ登録_異常系_必須項目未入力" classname="specs\auth.spec.ts" time="1.295">
+</testcase>
+<testcase name="ユーザ登録_異常系_パスワード不一致" classname="specs\auth.spec.ts" time="1.489">
+</testcase>
+<testcase name="ログイン_正常系_一般ユーザ" classname="specs\auth.spec.ts" time="1.119">
+</testcase>
+<testcase name="ログイン_正常系_管理者" classname="specs\auth.spec.ts" time="1.189">
+</testcase>
+<testcase name="ログイン_異常系" classname="specs\auth.spec.ts" time="1.164">
+</testcase>
+</testsuite>
+<testsuite name="specs\reservation.spec.ts" timestamp="2026-06-07T07:01:17.055Z" hostname="webkit" tests="6" failures="0" skipped="0" time="19.833" errors="0">
+<testcase name="正常系 › 予約フロー全体" classname="specs\reservation.spec.ts" time="5.046">
+</testcase>
+<testcase name="正常系 › 予約確認でキャンセル後に再度予約フローを実施" classname="specs\reservation.spec.ts" time="5.704">
+</testcase>
+<testcase name="異常系 › レストラン一覧で検索結果が無い" classname="specs\reservation.spec.ts" time="1.726">
+</testcase>
+<testcase name="異常系 › 予約入力時過去日時エラー" classname="specs\reservation.spec.ts" time="2.553">
+</testcase>
+<testcase name="異常系 › 予約入力時受付時間外エラー" classname="specs\reservation.spec.ts" time="2.438">
+</testcase>
+<testcase name="異常系 › 席決定時対応する席詳細が無い" classname="specs\reservation.spec.ts" time="2.366">
 </testcase>
 </testsuite>
 </testsuites>

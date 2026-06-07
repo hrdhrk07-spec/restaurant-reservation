@@ -2,6 +2,7 @@ import {test, expect} from '@playwright/test';
 import {LoginPage} from '../pages/LoginPage';
 import {RegisterPage} from '../pages/RegisterPage';
 import {RegisterCompletePage} from '../pages/RegisterCompletePage';
+import {TEST_USER_EMAIL, TEST_USER_PASSWORD, TEST_CREATE_USER_PASSWORD, TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD} from "../helpers/envHelper";
 
 test('ユーザ登録_正常系', async ({page}) => {
 
@@ -18,9 +19,9 @@ test('ユーザ登録_正常系', async ({page}) => {
     await registerPage.fillRegisterForm(
         'e2e',
         '00000000000',
-        `e2e_${Date.now()}@example.com`,
-        'aaaaaaaaaaaaaaa',
-        'aaaaaaaaaaaaaaa'
+        `e2e_${crypto.randomUUID()}@example.com`,
+        TEST_CREATE_USER_PASSWORD,
+        TEST_CREATE_USER_PASSWORD
     )
     await registerPage.clickRegisterButton();
 
@@ -66,9 +67,9 @@ test('ユーザ登録_異常系_パスワード不一致', async ({page}) => {
     await registerPage.fillRegisterForm(
         'e2e',
         '00000000000',
-        `e2e_${Date.now()}@example.com`,
-        'aaaaaaaaaaaaaaa',
-        'aaaaaaaaaaaaaab'
+        `e2e_${crypto.randomUUID()}@example.com`,
+        TEST_CREATE_USER_PASSWORD,
+        'aaaaaaaaaaaaaaa'
     );
     await registerPage.clickRegisterButton();
 
@@ -83,7 +84,7 @@ test('ログイン_正常系_一般ユーザ', async ({page}) => {
 
     // ログイン画面
     await loginPage.goto();
-    await loginPage.fillLoginForm(process.env.TEST_USER_EMAIL ?? '', process.env.TEST_USER_PASSWORD ?? '');
+    await loginPage.fillLoginForm(TEST_USER_EMAIL, TEST_USER_PASSWORD);
     await loginPage.clickLoginButton();
 
     // ユーザ用ホーム画面
@@ -97,7 +98,7 @@ test('ログイン_正常系_管理者', async ({page}) => {
 
     // ログイン画面
     await loginPage.goto();
-    await loginPage.fillLoginForm(process.env.TEST_ADMIN_EMAIL ?? '', process.env.TEST_ADMIN_PASSWORD ?? '');
+    await loginPage.fillLoginForm(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
     await loginPage.clickLoginButton();
 
     // 管理者用ホーム画面
